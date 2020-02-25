@@ -93,16 +93,6 @@ except:
 
     from datetime import time, timedelta
 
-try:
-
-    import math
-
-except:
-
-    os.system('pip install math')
-
-    import math
-
 #######################################
 # VARIABLES
 #######################################
@@ -115,7 +105,7 @@ N_hours = 168                          #HOURLY SYS Table over past week
 
 plotWidth=400
 
-plotHeight=500
+plotHeight=300
 
 INTERVAL_START = []
 
@@ -144,10 +134,10 @@ DB_SIZE_DAILY_TBL   = 'EXA_DB_SIZE_DAILY'
 DB_SIZE_HOURLY_TBL  = 'EXA_DB_SIZE_HOURLY'
 
 COLUMN_DATE  = 'INTERVAL_START'
-COLUMN_1  = 'RECOMMENDED_DB_RAM_SIZE_AVG' #RAW_OBJECT_SIZE_AVG'  #STORAGE_SIZE_AVG
-COLUMN_2  = 'RECOMMENDED_DB_RAM_SIZE_MAX' #RAW_OBJECT_SIZE_MAX' #STORAGE_SIZE_MAX
-COLUMN_3  = 'STORAGE_SIZE_AVG' #MEM_OBJECT_SIZE_AVG'
-COLUMN_4  = 'STORAGE_SIZE_MAX' #MEM_OBJECT_SIZE_MAX'
+COLUMN_1  = 'RAW_OBJECT_SIZE_AVG' #RECOMMENDED_db_raw_SIZE_AVG' #STORAGE_SIZE_AVG
+COLUMN_2  = 'RAW_OBJECT_SIZE_MAX' #RECOMMENDED_db_raw_SIZE_MAX' #STORAGE_SIZE_MAX
+COLUMN_3  = 'MEM_OBJECT_SIZE_AVG'
+COLUMN_4  = 'MEM_OBJECT_SIZE_MAX'
 
 COLS = [COLUMN_DATE, COLUMN_1, COLUMN_2, COLUMN_3, COLUMN_4]
 COLS_TBL1 = [COLUMN_DATE, COLUMN_1, COLUMN_2]
@@ -336,8 +326,8 @@ df_mem_daily = pd.DataFrame(dailyFile, columns = ["INTERVAL_START",
     "STATISTICS_SIZE_MAX",
     "SNAPSHOT_BACKUP_DATA_AVG",
     "SNAPSHOT_BACKUP_DATA_MAX",
-    "RECOMMENDED_DB_RAM_SIZE_AVG",
-    "RECOMMENDED_DB_RAM_SIZE_MAX",
+    "RECOMMENDED_db_raw_SIZE_AVG",
+    "RECOMMENDED_db_raw_SIZE_MAX",
     "STORAGE_SIZE_AVG",
     "STORAGE_SIZE_MAX",
     "USE_AVG",
@@ -393,6 +383,19 @@ for mem_data_item in df_tbl1_hourly_day[COLUMN_2]:
 
     cnt += 1
 
+
+#######################################
+# EASTER EGG: FOR DICTIONARY
+#######################################
+# DICT_db_raw_SIZE_MAX = {}
+# DICT_db_raw_SIZE_AVG = {}
+# for TIME, AVG, MAX in dailyFile:
+#         INTERVAL_START.append(TIME)
+#         DICT_db_raw_SIZE_AVG[TIME] = AVG
+#         DICT_db_raw_SIZE_MAX[TIME] = MAX
+# print("DICT_db_raw_SIZE_AVG:", DICT_db_raw_SIZE_AVG)
+# print("DICT_db_raw_SIZE_MAX:", DICT_db_raw_SIZE_MAX)
+#######################################
 
 
 ###############################################################################
@@ -531,8 +534,8 @@ df_mem_daily = pd.DataFrame(dailyFile, columns = ["INTERVAL_START",
     "STATISTICS_SIZE_MAX",
     "SNAPSHOT_BACKUP_DATA_AVG",
     "SNAPSHOT_BACKUP_DATA_MAX",
-    "RECOMMENDED_DB_RAM_SIZE_AVG",
-    "RECOMMENDED_DB_RAM_SIZE_MAX",
+    "RECOMMENDED_db_mem_SIZE_AVG",
+    "RECOMMENDED_db_mem_SIZE_MAX",
     "STORAGE_SIZE_AVG",
     "STORAGE_SIZE_MAX",
     "USE_AVG",
@@ -583,7 +586,7 @@ for mem_data_item in df_tbl2_hourly_day[COLUMN_4]:
 #      #      ########## ####### ual
 ###############################################################################    
 
-output_file("DB_SIZE_RECOMMED_STORAGE.html", title = "STORAGE")
+output_file("raw_obj_mem.html", title = "RAW & MEM")
 
 ###############################################################################
 #   #######   #     ####    #      ######  ##
@@ -618,8 +621,6 @@ line_tbl1_hourly.line( x=COLUMN_DATE, y = COLUMN_1 , color=("blue"), source=df_t
 
 line_tbl1_hourly.legend.location = 'bottom_left'
 
-line_tbl1_hourly.xaxis.major_label_orientation = math.pi/4
-
 #######################################
 # Visualize Daily Data
 #######################################
@@ -637,13 +638,11 @@ line_tbl1_daily.title.text_font_size = "15px"
 
 line_tbl1_daily.title.background_fill_color = "darkblue"##aaaaee"
 
-line_tbl1_daily.line( x=COLUMN_DATE, y =   COLUMN_2 , color=("red"),  source=df_mem_daily, legend = ('DAILY ' + COLUMN_2))
+line_tbl1_daily.line( x=COLUMN_DATE, y =   COLUMN_2 , color=("red"),  source=df_mem_daily, legend = ('DAILY ' + COLUMN_2))#, legend = "db_raw_SIZE_MAX")#, hatch_weight = 5, legend_label="Sunrise")
 
-line_tbl1_daily.line( x=COLUMN_DATE, y = COLUMN_1 , color=("blue"), source=df_mem_daily, legend = ("DAILY " + COLUMN_1))
+line_tbl1_daily.line( x=COLUMN_DATE, y = COLUMN_1 , color=("blue"), source=df_mem_daily, legend = ("DAILY " + COLUMN_1))#, legend = ["db_raw_SIZE_AVG","db_raw_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
 
 line_tbl1_daily.legend.location = 'bottom_left'
-
-line_tbl1_daily.xaxis.major_label_orientation = math.pi/4
 
 #######################################
 # Visualize Monthly Data
@@ -671,8 +670,6 @@ vbar_tbl1_tot_col1.vbar(x = 'x', top = 'y1', color= "blue",  width = 3, source=v
 
 vbar_tbl1_tot_col1.legend.location = 'bottom_left'
 
-vbar_tbl1_tot_col1.xaxis.major_label_orientation = math.pi/4
-
 
 varea_tbl1_stack_source = ColumnDataSource(data=dict(x = INTERVAL_START, 
                                    y1 = LIST_RAW_SIZE_AVG, 
@@ -693,8 +690,6 @@ vbar_tbl1_tot_col2.title.text_font_size = "15px"
 vbar_tbl1_tot_col2.title.background_fill_color = "darkblue"
 
 vbar_tbl1_tot_col2.vbar(x = 'x', top = 'y2', color= "red",  width = 3, source=varea_tbl1_stack_source, legend = COLUMN_2)
-
-vbar_tbl1_tot_col2.xaxis.major_label_orientation = math.pi/4
 
 
 
@@ -732,9 +727,6 @@ line_tbl2_hourly.line( x=COLUMN_DATE, y = COLUMN_3 , color=("blue"), source=df_t
 line_tbl2_hourly.legend.location = 'bottom_left'
 
 
-line_tbl2_hourly.xaxis.major_label_orientation = math.pi/4
-
-
 
 line_tbl2_daily = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
 
@@ -753,8 +745,6 @@ line_tbl2_daily.line( x=COLUMN_DATE, y =   COLUMN_4 , color=("red"),  source=df_
 line_tbl2_daily.line( x=COLUMN_DATE, y = COLUMN_3 , color=("blue"), source=df_mem_daily, legend = ("DAILY " + COLUMN_3))#, legend = ["db_mem_SIZE_AVG","db_mem_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
 
 line_tbl2_daily.legend.location = 'bottom_left'
-
-line_tbl2_daily.xaxis.major_label_orientation = math.pi/4
 
 #######################################
 # Visualize Monthly Data
@@ -782,8 +772,6 @@ vbar_tbl2_tot_col1.vbar(x = 'x', top = 'y1', color= "blue",  width = 3, source=v
 
 vbar_tbl2_tot_col1.legend.location = 'bottom_left'
 
-vbar_tbl2_tot_col1.xaxis.major_label_orientation = math.pi/4
-
 
 varea_tbl2_stack_source = ColumnDataSource(data=dict(x = INTERVAL_START, 
                                    y1 = LIST_MEM_SIZE_AVG, 
@@ -805,7 +793,15 @@ vbar_tbl2_tot_col2.title.background_fill_color = "darkblue"
 
 vbar_tbl2_tot_col2.vbar(x = 'x', top = 'y2', color= "red",  width = 3, source=varea_tbl2_stack_source, legend = COLUMN_4)
 
-vbar_tbl2_tot_col2.xaxis.major_label_orientation = math.pi/4
+
+
+
+
+
+
+
+
+
 
 
 
@@ -814,25 +810,25 @@ MEM_OBJECT_GRIDPLOT = gridplot([[vbar_tbl1_tot_col1, vbar_tbl1_tot_col2, line_tb
 
 show(MEM_OBJECT_GRIDPLOT)
 
-output_file("alt_view.html", title = "DB_RAM ALT")
+output_file("RAW_MEM_ALT.html", title = "RAW ALT")
 
 x = INTERVAL_START
 
 y = LIST_RAW_SIZE_MAX
 
-t = figure(plot_width = (plotWidth - 100), plot_height = (plotHeight - 100), x_axis_type = 'datetime')
+t = figure(plot_width = (int(plotWidth *.8 )), plot_height = int(int((plotHeight * .8))), x_axis_type = 'datetime')
 
 t.line(x, y, color = 'green')
 
 t.circle(x, y, color = 'red', legend_label = COLUMN_2)
 
-p = figure(plot_width=(plotWidth - 100), plot_height=(plotHeight - 100))
+p = figure(plot_width=int((plotWidth * .8)), plot_height=int((plotHeight * .8)))
 
-q = figure(plot_width = (plotWidth - 100), plot_height = (plotHeight - 100), x_axis_type = 'datetime')
+q = figure(plot_width = int((plotWidth * .8)), plot_height = int((plotHeight * .8)), x_axis_type = 'datetime')
 
-r = figure(plot_width = (plotWidth - 100), plot_height = (plotHeight - 100), x_axis_type = 'datetime')
+r = figure(plot_width = int((plotWidth * .8)), plot_height = int((plotHeight * .8)), x_axis_type = 'datetime')
 
-s = figure(plot_width = (plotWidth - 100), plot_height = (plotHeight - 100), x_axis_type = 'datetime')
+s = figure(plot_width = int((plotWidth * .8)), plot_height = int((plotHeight * .8)), x_axis_type = 'datetime')
 
 vbar_tbl1_source = ColumnDataSource(data=dict(
         x=list(INTERVAL_START),
@@ -847,13 +843,6 @@ q.line(INTERVAL_START, LIST_RAW_SIZE_MAX, color = 'red', alpha = 0.2, line_width
 r.line(INTERVAL_START, LIST_RAW_SIZE_AVG, color = 'navy', alpha = 0.5 , legend_label = COLUMN_1)
 
 s.line(INTERVAL_START, LIST_RAW_SIZE_MAX, color = 'red', alpha = 0.5,  legend_label = COLUMN_2)
-
-
-p.xaxis.major_label_orientation = math.pi/4
-q.xaxis.major_label_orientation = math.pi/4
-r.xaxis.major_label_orientation = math.pi/4
-s.xaxis.major_label_orientation = math.pi/4
-t.xaxis.major_label_orientation = math.pi/4
 
 show(gridplot([[p, q, r, s, t]], toolbar_location = 'left'))
 

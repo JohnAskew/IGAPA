@@ -34,6 +34,8 @@ except:
 
     os.system('pip install pyexasol')
 
+    import pyexasol
+
 try:
 
     import csv
