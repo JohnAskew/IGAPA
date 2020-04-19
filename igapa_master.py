@@ -139,18 +139,18 @@ else:
 
     print("# This solution is looking for either: ")
 
-    print("#", str(work_dir + '\\' + DAILY_TBLZ[0]), "and", str(work_dir + '\\' + HOURLY_TBLZ[0]) )
+    print("#", str(new_dir + '\\' + DAILY_TBLZ[0]), "and", str(new_dir + '\\' + HOURLY_TBLZ[0]) )
 
     print("# OR")
 
-    print("#", str(work_dir + '\\' + DAILY_TBLZ[1]), "and", str(work_dir + '\\' + HOURLY_TBLZ[1]) )
+    print("#", str(new_dir + '\\' + DAILY_TBLZ[1]), "and", str(new_dir + '\\' + HOURLY_TBLZ[1]) )
 
     print("# OR")
 
-    print("#", str(work_dir + '\\' + DAILY_TBLZ[2]), "and", str(work_dir + '\\' + HOURLY_TBLZ[2]) )
+    print("#", str(new_dir + '\\' + DAILY_TBLZ[2]), "and", str(new_dir + '\\' + HOURLY_TBLZ[2]) )
 
     print("# OR")
 
-    print("#", str(work_dir + '\\' + DAILY_TBLZ[3]), "and", str(work_dir + '\\' + HOURLY_TBLZ[3]) )
+    print("#", str(new_dir + '\\' + DAILY_TBLZ[3]), "and", str(new_dir + '\\' + HOURLY_TBLZ[3]) )
 
     print("#####################################")
