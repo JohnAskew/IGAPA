@@ -111,6 +111,46 @@ print("#####################################")
 
 print()
 
-if (os.path.exists(work_dir + '\\' + DAILY_TBLZ[0])  and os.path.exists(work_dir + '\\' + HOURLY_TBLZ[0])):
+if (
+     (os.path.exists(work_dir + '\\' + DAILY_TBLZ[0])  and (os.path.exists(work_dir + '\\' + HOURLY_TBLZ[0]))) or
+
+     (os.path.exists(work_dir + '\\' + DAILY_TBLZ[1])  and (os.path.exists(work_dir + '\\' + HOURLY_TBLZ[1]))) or 
+
+     (os.path.exists(work_dir + '\\' + DAILY_TBLZ[2])  and (os.path.exists(work_dir + '\\' + HOURLY_TBLZ[2]))) or 
+
+     (os.path.exists(work_dir + '\\' + DAILY_TBLZ[3])  and (os.path.exists(work_dir + '\\' + HOURLY_TBLZ[3]))) 
+    ):
 
         subprocess.call(["python", dir_path + "/" + "subr_chart_4_rows.py", str(in_ticket)])
+
+else:
+
+    print("#####################################")
+
+    print("# WARNING:", os.path.basename(__file__))
+
+    print("# processed ticket:\t", new_dir)
+
+    print("# BUT did not find any usable CSV files for")
+
+    print("# generating charts. Ending processing without any charts.")
+
+    print("#")
+
+    print("# This solution is looking for either: ")
+
+    print("#", str(work_dir + '\\' + DAILY_TBLZ[0]), "and", str(work_dir + '\\' + HOURLY_TBLZ[0]) )
+
+    print("# OR")
+
+    print("#", str(work_dir + '\\' + DAILY_TBLZ[1]), "and", str(work_dir + '\\' + HOURLY_TBLZ[1]) )
+
+    print("# OR")
+
+    print("#", str(work_dir + '\\' + DAILY_TBLZ[2]), "and", str(work_dir + '\\' + HOURLY_TBLZ[2]) )
+
+    print("# OR")
+
+    print("#", str(work_dir + '\\' + DAILY_TBLZ[3]), "and", str(work_dir + '\\' + HOURLY_TBLZ[3]) )
+
+    print("#####################################")
