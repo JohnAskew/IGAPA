@@ -13,15 +13,25 @@ try:
 except:
 
     print()
+
     print("########################################")
+
     print("# Error:")
+
     print("#")
+
     print("# program subr_validate_ticket.py not found")
+
     print("# so we are unable to validate the ticket.")
+
     print("#")
+
     print("# Aborting with not action taken...")
+
     print("########################################")
+
     print()
+
     sys.exit(0)
 
 try:
@@ -92,9 +102,9 @@ myTicket= a.ticket_validate_number() # Your ticket: EXA-1234x
 
 work_ticket = 0
 
-user = 'joas'     # JIRA user
+user = '<user>'     # JIRA user
 
-pasw = '!12345G0exaso' # JIRA password
+pasw = '<secret>' # JIRA password
 
 jiraURL = 'https://www.exasol.com/support/rest/api/2/issue/EXA-'
 
