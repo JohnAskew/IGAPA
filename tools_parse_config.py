@@ -20,32 +20,71 @@ class ParseConfig:
         self.myconfig = myconfig
 
 #-------------------------------------#
-    def read_config_sections(self):
+    def read_config_sections(self, path = '.'):
 #-------------------------------------#
+
+        self.path = path
 
         config = configparser.ConfigParser()
 
-        config.read('c:\\users\\joas\\desktop\\exasol\\igapa\\config.ini')
+        x = (self.path + '/config.ini')
 
-        z = config.sections()
+        y = config.read(x)
 
-        print("#######################################")
+        if len(y) == 0:
 
-        print("# INFO:", os.path.basename(__file__),"found config.ini with these sections:", z)
+            print("#######################################")
 
-        print("#")
+            print("# FATAL:", os.path.basename(__file__))
 
-        if __name__ == '__main__':
-            
-            pass
+            print("# config.ini not found or is not readable.")
 
-        else:
+            print("# Ensure config.ini exists in this directory:", os.getcwd())
+
+            print("# Here is the attempted command:", y)
+
+            print("# Aborting with no action taken.")
+
+            print("#######################################")
+
+            sys.exit(0)
+
+
+        try:
+
+            z = config.sections()
+
+            print("#######################################")
+
+            print("# INFO:", os.path.basename(__file__),"found config.ini with these sections:", z)
+
+            print()
 
             return z
 
+        except:
+
+            print("#######################################")
+
+            print("ERROR:", os.path.basename(__file__))
+
+            print("#Unable to parse config.ini. ")
+
+            print("# Aborting with no action taken")
+
+            print("#######################################")
+
+            print(e)
+
+            sys.exit(0)
+
+        
+
 #-------------------------------------#
-    def run(self):
+    def run(self, path = '.'):
 #-------------------------------------#
+
+        self.path = path
 
         myConfig = self.myconfig
 
@@ -53,7 +92,29 @@ class ParseConfig:
         
         config = configparser.ConfigParser()
 
-        config.read('c:\\users\\joas\\desktop\\exasol\\igapa\\config.ini')
+        x = (self.path + '/config.ini')
+
+        try:
+
+            config.read(x)
+
+        except Exception as e:
+
+            print("#######################################")
+
+            print("FATAL:", os.path.basename(__file__))
+
+            print("# Unable to config.read('config.ini')")
+
+            print("# in section run with config.read:", config.read('config.ini'))
+
+            print("# Aborting with no action taken.")
+
+            print("#######################################")
+
+            print(e)
+
+            sys.exit(0)
 
         for item in ['CONFIG_HOURLY_TBL','CONFIG_DAILY_TBL','CONFIG_ROW1_COL_X_AXIS','CONFIG_ROW1_COL_Y_AXIS_1','CONFIG_ROW1_COL_Y_AXIS_2','CONFIG_ROW2_COL_X_AXIS','CONFIG_ROW2_COL_Y_AXIS_1','CONFIG_ROW2_COL_Y_AXIS_2','CONFIG_ROW3_COL_X_AXIS','CONFIG_ROW3_COL_Y_AXIS_1','CONFIG_ROW3_COL_Y_AXIS_2','CONFIG_ROW4_COL_X_AXIS','CONFIG_ROW4_COL_Y_AXIS_1','CONFIG_ROW4_COL_Y_AXIS_2']:
 

@@ -127,6 +127,8 @@ except:
 # Set up processinging logic
 #######################################
 
+save_dir = os.getcwd()
+
 if __name__ == "__main__":
 
     if len(sys.argv) > 1:
@@ -219,9 +221,50 @@ largeplotWidth = 700  #800
  
 largeplotHeight = 565 #600
 
-b = ParseConfig(class_chart)
+try:
 
-config_sections = b.read_config_sections()
+    b = ParseConfig(class_chart)
+
+except Exception as e:
+
+    print("#######################################")
+
+    print("FATAL:", os.path.basename(__file__))
+
+    print("# Unable to reference ParseConfig using:")
+
+    print("# b = ParseConfig(class_chart)")
+
+    print("# Does pgm tools_parse_config.py exist in", os.getcwd(),"?" )
+
+    print("# Aborting with no action taken.")
+
+    print("#######################################")
+
+    print(e)
+
+    sys.exit(0)
+
+config_sections = b.read_config_sections(save_dir)
+
+if len(config_sections) == 0:
+
+    print("#######################################")
+
+    print("FATAL:", os.path.basename(__file__))
+
+    print("# Unable to reference ParseConfig using:")
+
+    print("# config_sections = b.read_config_sections()")
+
+    print("# Does pgm tools_parse_config.py exist in", os.getcwd(),"?" )
+
+    print("# Aborting with no action taken.")
+
+    print("#######################################")
+
+    sys.exit(0)
+
 
 #######################################
 # LOOP for duration of the program
@@ -238,7 +281,7 @@ for config_section in config_sections:
 
     process_section = ParseConfig(config_section)
 
-    CONFIG_HOURLY_TBL,CONFIG_DAILY_TBL,CONFIG_ROW1_COL_X_AXIS,CONFIG_ROW1_COL_Y_AXIS_1,CONFIG_ROW1_COL_Y_AXIS_2,CONFIG_ROW2_COL_X_AXIS,CONFIG_ROW2_COL_Y_AXIS_1,CONFIG_ROW2_COL_Y_AXIS_2,CONFIG_ROW3_COL_X_AXIS,CONFIG_ROW3_COL_Y_AXIS_1,CONFIG_ROW3_COL_Y_AXIS_2,CONFIG_ROW4_COL_X_AXIS,CONFIG_ROW4_COL_Y_AXIS_1,CONFIG_ROW4_COL_Y_AXIS_2 = process_section.run()
+    CONFIG_HOURLY_TBL,CONFIG_DAILY_TBL,CONFIG_ROW1_COL_X_AXIS,CONFIG_ROW1_COL_Y_AXIS_1,CONFIG_ROW1_COL_Y_AXIS_2,CONFIG_ROW2_COL_X_AXIS,CONFIG_ROW2_COL_Y_AXIS_1,CONFIG_ROW2_COL_Y_AXIS_2,CONFIG_ROW3_COL_X_AXIS,CONFIG_ROW3_COL_Y_AXIS_1,CONFIG_ROW3_COL_Y_AXIS_2,CONFIG_ROW4_COL_X_AXIS,CONFIG_ROW4_COL_Y_AXIS_1,CONFIG_ROW4_COL_Y_AXIS_2 = process_section.run(save_dir)
 
     DAILY_TBL   =  CONFIG_DAILY_TBL
 
