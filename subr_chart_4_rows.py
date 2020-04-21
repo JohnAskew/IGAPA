@@ -13,18 +13,17 @@ try:
 
     from bokeh.layouts import column, gridplot
 
-    from bokeh.models import ColumnDataSource, Legend, LabelSet, Label, LegendItem
+    from bokeh.models import ColumnDataSource, Legend, LabelSet, Label, LegendItem, Div
 
 except:
 
-	os.system('pip install bokeh') 
+    os.system('pip install bokeh')
 
-	from bokeh.plotting import figure, output_file, show
+    from bokeh.plotting import figure, output_file, show
 
-	from bokeh.layouts  import column, gridplot
+    from bokeh.layouts  import column, gridplot
 
-	from bokeh.models import ColumnDataSource, Legend, LabelSet, Label, LegendItem
-
+    from bokeh.models import ColumnDataSource, Legend, LabelSet, Label, LegendItem, Div
 
 try:
 
@@ -204,9 +203,21 @@ N_hours = 168                          #HOURLY SYS Table over past week
 
 N_hourly_days = 7                      #Needs to match N_hours 
 
+legend_font_size = "9px"
+
+legend_location  = 'top_left'
+
 plotWidth=400
 
-plotHeight=300
+plotHeight=400 #300
+
+smallplotWidth = 400
+
+smallplotHeight = 250 #400
+
+largeplotWidth = 700  #800
+ 
+largeplotHeight = 565 #600
 
 b = ParseConfig(class_chart)
 
@@ -870,7 +881,7 @@ for config_section in config_sections:
     # Visualize Hourly Past  5 Day Data
     #######################################
 
-    line1_tbl1_hourly_7_day = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    line1_tbl1_hourly_7_day = figure(plot_width=largeplotWidth, plot_height=largeplotHeight,  x_axis_type="datetime")
 
     line1_tbl1_hourly_7_day.title.text = (str(N_hourly_days) + " Day " +  HOURLY_TBL)
 
@@ -882,11 +893,13 @@ for config_section in config_sections:
 
     line1_tbl1_hourly_7_day.title.background_fill_color = "darkblue"##aaaaee"
 
-    line1_tbl1_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_2 , color=("red"),  source=df_hourly_7_day_tbl_1, legend_label = ('DAILY ' + COLUMN_2))
+    line1_tbl1_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_2 , color=("red"),  source=df_hourly_7_day_tbl_1, legend_label = ('HOURLY ' + COLUMN_2) )
 
-    line1_tbl1_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_1 , color=("blue"), source=df_hourly_7_day_tbl_1, legend_label = ("DAILY"  + COLUMN_1))
+    line1_tbl1_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_1 , color=("blue"), source=df_hourly_7_day_tbl_1, legend_label = ("HOURLY"  + COLUMN_1))
 
-    line1_tbl1_hourly_7_day.legend.location = 'bottom_left'
+    line1_tbl1_hourly_7_day.legend.location = legend_location #legend_location
+
+    line1_tbl1_hourly_7_day.legend.label_text_font_size = legend_font_size
 
 
     #######################################
@@ -898,7 +911,7 @@ for config_section in config_sections:
     #######################################
 
 
-    line1_tbl1_daily = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    line1_tbl1_daily = figure(plot_width=largeplotWidth, plot_height=largeplotHeight,  x_axis_type="datetime")
 
     line1_tbl1_daily.title.text = ("Past Month " + DAILY_TBL)
 
@@ -914,7 +927,9 @@ for config_section in config_sections:
 
     line1_tbl1_daily.line( x=COLUMN_DATE, y = COLUMN_1 , color=("blue"), source=df_daily_30_day_tbl_1, legend_label = ("DAILY " + COLUMN_1))#, legend = ["db_raw_SIZE_AVG","db_raw_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
 
-    line1_tbl1_daily.legend.location = 'bottom_left'
+    line1_tbl1_daily.legend.location = legend_location
+
+    line1_tbl1_daily.legend.label_text_font_size = legend_font_size
 
 
     #######################################
@@ -927,7 +942,7 @@ for config_section in config_sections:
                                        ))
 
 
-    vbar_tbl1_tot_col1 = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    vbar_tbl1_tot_col1 = figure(plot_width=smallplotWidth, plot_height=smallplotHeight,  x_axis_type="datetime")
 
     vbar_tbl1_tot_col1.title.text = (HOURLY_TBL)
 
@@ -941,14 +956,16 @@ for config_section in config_sections:
 
     vbar_tbl1_tot_col1.vbar(x = 'x', top = 'y1', color= "blue",  width = 3, source=vbar_tbl1_source, legend_label = COLUMN_1)
 
-    vbar_tbl1_tot_col1.legend.location = 'bottom_left'
+    vbar_tbl1_tot_col1.legend.location = legend_location
+
+    vbar_tbl1_tot_col1.legend.label_text_font_size = legend_font_size
 
     varea_tbl1_stack_source = ColumnDataSource(data=dict(x = df_hourly_full_tbl_1[COLUMN_DATE], 
                                        y1 = df_hourly_full_tbl_1[COLUMN_1],
                                        y2 = df_hourly_full_tbl_1[COLUMN_2],
                                        ))
 
-    vbar_tbl1_tot_col2 = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    vbar_tbl1_tot_col2 = figure(plot_width=smallplotWidth, plot_height=smallplotHeight,  x_axis_type="datetime")
 
     vbar_tbl1_tot_col2.title.text = (HOURLY_TBL)
 
@@ -962,6 +979,10 @@ for config_section in config_sections:
 
     vbar_tbl1_tot_col2.vbar(x = 'x', top = 'y2', color= "red",  width = 3, source=varea_tbl1_stack_source, legend_label = COLUMN_2)
 
+    vbar_tbl1_tot_col2.legend.location = legend_location
+
+    vbar_tbl1_tot_col2.legend.label_text_font_size = legend_font_size
+
     ###############################################################################
     #   #######   #     ####    #      ######  ###
     #      #     #  #   #   #   #      #      #  #
@@ -974,7 +995,7 @@ for config_section in config_sections:
     # Visualize Hourly Past  5 Day Data
     #######################################
 
-    line2_tbl2_hourly_7_day = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    line2_tbl2_hourly_7_day = figure(plot_width=largeplotWidth, plot_height=largeplotHeight,  x_axis_type="datetime")
 
     line2_tbl2_hourly_7_day.title.text = (str(N_hourly_days) + " Day " +  HOURLY_TBL)
 
@@ -986,11 +1007,13 @@ for config_section in config_sections:
 
     line2_tbl2_hourly_7_day.title.background_fill_color = "darkblue"##aaaaee"
 
-    line2_tbl2_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_4 , color=("red"),  source=df_hourly_7_day_tbl_2, legend_label = ('DAILY ' + COLUMN_4))
+    line2_tbl2_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_4 , color=("red"),  source=df_hourly_7_day_tbl_2, legend_label = ('HOURLY ' + COLUMN_4))
 
-    line2_tbl2_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_3 , color=("blue"), source=df_hourly_7_day_tbl_2, legend_label = ("DAILY"  + COLUMN_3))
+    line2_tbl2_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_3 , color=("blue"), source=df_hourly_7_day_tbl_2, legend_label = ("HOURLY"  + COLUMN_3))
 
-    line2_tbl2_hourly_7_day.legend.location = 'bottom_left'
+    line2_tbl2_hourly_7_day.legend.location = legend_location
+
+    line2_tbl2_hourly_7_day.legend.label_text_font_size = legend_font_size
 
 
     #######################################
@@ -1002,7 +1025,7 @@ for config_section in config_sections:
     #######################################
 
 
-    line2_tbl2_daily = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    line2_tbl2_daily = figure(plot_width=largeplotWidth, plot_height=largeplotHeight,  x_axis_type="datetime")
 
     line2_tbl2_daily.title.text = ("Past Month " + DAILY_TBL)
 
@@ -1018,7 +1041,9 @@ for config_section in config_sections:
 
     line2_tbl2_daily.line( x=COLUMN_DATE, y = COLUMN_3 , color=("blue"), source=df_daily_30_day_tbl_2, legend_label = ("DAILY " + COLUMN_3))#, legend = ["db_tbl_2_SIZE_AVG","db_tbl_2_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
 
-    line2_tbl2_daily.legend.location = 'bottom_left'
+    line2_tbl2_daily.legend.location = legend_location
+
+    line2_tbl2_daily.legend.label_text_font_size = legend_font_size
 
 
     #######################################
@@ -1031,7 +1056,7 @@ for config_section in config_sections:
                                        #label = [COLUMN_3, COLUMN_4]))
 
 
-    vbar_tbl2_tot_col1 = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    vbar_tbl2_tot_col1 = figure(plot_width=smallplotWidth, plot_height=smallplotHeight,  x_axis_type="datetime")
 
     vbar_tbl2_tot_col1.title.text = (HOURLY_TBL)
 
@@ -1045,7 +1070,9 @@ for config_section in config_sections:
 
     vbar_tbl2_tot_col1.vbar(x = 'x', top = 'y1', color= "blue",  width = 3, source=vbar_tbl2_source, legend_label = COLUMN_3)
 
-    vbar_tbl2_tot_col1.legend.location = 'bottom_left'
+    vbar_tbl2_tot_col1.legend.location = legend_location
+
+    vbar_tbl2_tot_col1.legend.label_text_font_size = legend_font_size
 
 
     varea_tbl2_stack_source = ColumnDataSource(data=dict(x = df_hourly_full_tbl_2[COLUMN_DATE], #INTERVAL_START, 
@@ -1053,7 +1080,7 @@ for config_section in config_sections:
                                        y2 = df_hourly_full_tbl_2[COLUMN_4], #LIST_RAW_SIZE_MAX, 
                                        ))
 
-    vbar_tbl2_tot_col2 = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    vbar_tbl2_tot_col2 = figure(plot_width=smallplotWidth, plot_height=smallplotHeight,  x_axis_type="datetime")
 
     vbar_tbl2_tot_col2.title.text = (HOURLY_TBL)
 
@@ -1066,6 +1093,11 @@ for config_section in config_sections:
     vbar_tbl2_tot_col2.title.background_fill_color = "darkblue"
 
     vbar_tbl2_tot_col2.vbar(x = 'x', top = 'y2', color= "red",  width = 3, source=varea_tbl2_stack_source, legend_label = COLUMN_4)
+
+    vbar_tbl2_tot_col2.legend.location = legend_location
+
+    vbar_tbl2_tot_col2.legend.label_text_font_size = legend_font_size
+
 
     ###############################################################################
     #   #######   #     ####    #      ######  ####
@@ -1080,7 +1112,7 @@ for config_section in config_sections:
     # Visualize Hourly Past  5 Day Data
     #######################################
 
-    line3_tbl3_hourly_7_day = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    line3_tbl3_hourly_7_day = figure(plot_width=largeplotWidth, plot_height=largeplotHeight,  x_axis_type="datetime")
 
     line3_tbl3_hourly_7_day.title.text = (str(N_hourly_days) + " Day " +  HOURLY_TBL)
 
@@ -1092,11 +1124,13 @@ for config_section in config_sections:
 
     line3_tbl3_hourly_7_day.title.background_fill_color = "darkblue"##aaaaee"
 
-    line3_tbl3_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_6 , color=("red"),  source=df_hourly_7_day_tbl_3, legend_label = ('DAILY ' + COLUMN_6))
+    line3_tbl3_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_6 , color=("red"),  source=df_hourly_7_day_tbl_3, legend_label = ('HOURLY ' + COLUMN_6))
 
-    line3_tbl3_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_5 , color=("blue"), source=df_hourly_7_day_tbl_3, legend_label = ("DAILY"  + COLUMN_5))
+    line3_tbl3_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_5 , color=("blue"), source=df_hourly_7_day_tbl_3, legend_label = ("HOURLY"  + COLUMN_5))
 
-    line3_tbl3_hourly_7_day.legend.location = 'bottom_left'
+    line3_tbl3_hourly_7_day.legend.location = legend_location
+
+    line3_tbl3_hourly_7_day.legend.label_text_font_size = legend_font_size
 
 
     #######################################
@@ -1108,7 +1142,7 @@ for config_section in config_sections:
     #######################################
 
 
-    line3_tbl3_daily = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    line3_tbl3_daily = figure(plot_width=largeplotWidth, plot_height=largeplotHeight,  x_axis_type="datetime")
 
     line3_tbl3_daily.title.text = ("Past Month " + DAILY_TBL)
 
@@ -1124,7 +1158,9 @@ for config_section in config_sections:
 
     line3_tbl3_daily.line( x=COLUMN_DATE, y = COLUMN_5 , color=("blue"), source=df_daily_30_day_tbl_3, legend_label = ("DAILY " + COLUMN_5))#, legend = ["db_raw_SIZE_AVG","db_raw_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
 
-    line3_tbl3_daily.legend.location = 'bottom_left'
+    line3_tbl3_daily.legend.location = legend_location
+
+    line3_tbl3_daily.legend.label_text_font_size = legend_font_size
 
 
     #######################################
@@ -1137,7 +1173,7 @@ for config_section in config_sections:
                                        ))
 
 
-    vbar_tbl3_tot_col1 = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    vbar_tbl3_tot_col1 = figure(plot_width=smallplotWidth, plot_height=smallplotHeight,  x_axis_type="datetime")
 
     vbar_tbl3_tot_col1.title.text = (HOURLY_TBL)
 
@@ -1151,14 +1187,16 @@ for config_section in config_sections:
 
     vbar_tbl3_tot_col1.vbar(x = 'x', top = 'y1', color= "blue",  width = 3, source=vbar_tbl3_source, legend_label = COLUMN_5)
 
-    vbar_tbl3_tot_col1.legend.location = 'bottom_left'
+    vbar_tbl3_tot_col1.legend.location = legend_location
+
+    vbar_tbl3_tot_col1.legend.label_text_font_size = legend_font_size
 
     varea_tbl3_stack_source = ColumnDataSource(data=dict(x = df_hourly_full_tbl_3[COLUMN_DATE], 
                                        y1 = df_hourly_full_tbl_3[COLUMN_5],
                                        y2 = df_hourly_full_tbl_3[COLUMN_6],
                                        ))
 
-    vbar_tbl3_tot_col2 = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    vbar_tbl3_tot_col2 = figure(plot_width=smallplotWidth, plot_height=smallplotHeight,  x_axis_type="datetime")
 
     vbar_tbl3_tot_col2.title.text = (HOURLY_TBL)
 
@@ -1172,6 +1210,10 @@ for config_section in config_sections:
 
     vbar_tbl3_tot_col2.vbar(x = 'x', top = 'y2', color= "red",  width = 3, source=varea_tbl3_stack_source, legend_label = COLUMN_6)
 
+    vbar_tbl3_tot_col2.legend.location = legend_location
+
+    vbar_tbl3_tot_col2.legend.label_text_font_size = legend_font_size
+
 
 
     ###############################################################################
@@ -1184,10 +1226,10 @@ for config_section in config_sections:
 
 
     #######################################
-    # Visualize Hourly Past  5 Day Data
+    # Visualize Hourly Past  7 Day Data
     #######################################
 
-    line4_tbl4_hourly_7_day = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    line4_tbl4_hourly_7_day = figure(plot_width=largeplotWidth, plot_height=largeplotHeight,  x_axis_type="datetime")
 
     line4_tbl4_hourly_7_day.title.text = (str(N_hourly_days) + " Day " +  HOURLY_TBL)
 
@@ -1199,11 +1241,13 @@ for config_section in config_sections:
 
     line4_tbl4_hourly_7_day.title.background_fill_color = "darkblue"##aaaaee"
 
-    line4_tbl4_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_8 , color=("red"),  source=df_hourly_7_day_tbl_4, legend_label = ('DAILY ' + COLUMN_8))
+    line4_tbl4_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_8 , color=("red"),  source=df_hourly_7_day_tbl_4, legend_label = ('HOURLY ' + COLUMN_8))
 
-    line4_tbl4_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_7 , color=("blue"), source=df_hourly_7_day_tbl_4, legend_label = ("DAILY"  + COLUMN_7))
+    line4_tbl4_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_7 , color=("blue"), source=df_hourly_7_day_tbl_4, legend_label = ("HOURLY"  + COLUMN_7))
 
-    line4_tbl4_hourly_7_day.legend.location = 'bottom_left'
+    line4_tbl4_hourly_7_day.legend.location = legend_location
+
+    line4_tbl4_hourly_7_day.legend.label_text_font_size = legend_font_size
 
 
     #######################################
@@ -1215,7 +1259,7 @@ for config_section in config_sections:
     #######################################
 
 
-    line4_tbl4_daily = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    line4_tbl4_daily = figure(plot_width=largeplotWidth, plot_height=largeplotHeight,  x_axis_type="datetime")
 
     line4_tbl4_daily.title.text = ("Past Month " + DAILY_TBL)
 
@@ -1231,20 +1275,22 @@ for config_section in config_sections:
 
     line4_tbl4_daily.line( x=COLUMN_DATE, y = COLUMN_7 , color=("blue"), source=df_daily_30_day_tbl_4, legend_label = ("DAILY " + COLUMN_7))#, legend = ["db_tbl_4_SIZE_AVG","db_tbl_4_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
 
-    line4_tbl4_daily.legend.location = 'bottom_left'
+    line4_tbl4_daily.legend.location = legend_location
+
+    line4_tbl4_daily.legend.label_text_font_size = legend_font_size
 
 
     #######################################
     # Visualize Entire Data
     #######################################
 
-    vbar_tbl4_source = ColumnDataSource(data=dict(x = df_hourly_full_tbl_3[COLUMN_DATE], #INTERVAL_START, 
+    vbar_tbl4_source = ColumnDataSource(data=dict(x = df_hourly_full_tbl_4[COLUMN_DATE], #INTERVAL_START, 
                                        y1 = df_hourly_full_tbl_4[COLUMN_7], #LIST_RAW_SIZE_AVG, 
                                        y2 = df_hourly_full_tbl_4[COLUMN_8])) #, #LIST_RAW_SIZE_MAX, 
                                        #label = [COLUMN_7, COLUMN_8]))
 
 
-    vbar_tbl4_tot_col1 = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    vbar_tbl4_tot_col1 = figure(plot_width=smallplotWidth, plot_height=smallplotHeight,  x_axis_type="datetime")
 
     vbar_tbl4_tot_col1.title.text = (HOURLY_TBL)
 
@@ -1258,7 +1304,9 @@ for config_section in config_sections:
 
     vbar_tbl4_tot_col1.vbar(x = 'x', top = 'y1', color= "blue",  width = 3, source=vbar_tbl4_source, legend_label = COLUMN_7)
 
-    vbar_tbl4_tot_col1.legend.location = 'bottom_left'
+    vbar_tbl4_tot_col1.legend.location = legend_location
+
+    vbar_tbl4_tot_col1.legend.label_text_font_size = legend_font_size
 
 
     varea_tbl4_stack_source = ColumnDataSource(data=dict(x = df_hourly_full_tbl_4[COLUMN_DATE], #INTERVAL_START, 
@@ -1266,7 +1314,7 @@ for config_section in config_sections:
                                        y2 = df_hourly_full_tbl_4[COLUMN_8], #LIST_RAW_SIZE_MAX, 
                                        ))
 
-    vbar_tbl4_tot_col2 = figure(plot_width=plotWidth, plot_height=plotHeight,  x_axis_type="datetime")
+    vbar_tbl4_tot_col2 = figure(plot_width=smallplotWidth, plot_height=smallplotHeight,  x_axis_type="datetime")
 
     vbar_tbl4_tot_col2.title.text = (HOURLY_TBL)
 
@@ -1280,23 +1328,50 @@ for config_section in config_sections:
 
     vbar_tbl4_tot_col2.vbar(x = 'x', top = 'y2', color= "red",  width = 3, source=varea_tbl4_stack_source, legend_label = COLUMN_8)
 
-    #MEM_OBJECT_GRIDPLOT = gridplot([[vbar_tbl1_tot_col1, vbar_tbl1_tot_col2, line1_tbl1_daily, line1_tbl1_hourly_7_day], [vbar_tbl2_tot_col1, vbar_tbl2_tot_col2, line2_tbl2_daily, line2_tbl2_hourly_7_day]], toolbar_location='right')
-    MEM_OBJECT_GRIDPLOT = gridplot([[vbar_tbl1_tot_col1, 
-        vbar_tbl1_tot_col2, 
+    vbar_tbl4_tot_col2.legend.location = legend_location
+
+    vbar_tbl4_tot_col2.legend.label_text_font_size = legend_font_size
+
+###################################
+# Prepare visualization by grouping charts into rows and columns
+###################################
+
+    p_tbl1  = column(vbar_tbl1_tot_col1, vbar_tbl1_tot_col2)
+
+###################################
+# Add Row heading
+###################################
+
+    p_ctbl1 = column(Div(text = "<H3 style=\"text-align:center;\">" + COLUMN_1 + " & " + COLUMN_2 + "</H3>"), p_tbl1)
+
+###################################
+# Same again  - Prep by grouping and add row headings
+###################################
+
+    p_tbl2  = column(vbar_tbl2_tot_col1, vbar_tbl2_tot_col2)
+
+    p_ctbl2 = column(Div(text = "<H3 style=\"text-align:center;\">" + COLUMN_3 + "\t&\t" + COLUMN_4 + "</H3>"), p_tbl2)
+
+    p_tbl3  = column(vbar_tbl3_tot_col1, vbar_tbl3_tot_col2)
+
+    p_ctbl3 = column(Div(text = "<H3 style=\"text-align:center;\">" + COLUMN_5 + "\t&\t" + COLUMN_6 + "</H3>"), p_tbl3)
+
+    p_tbl4 = column(vbar_tbl4_tot_col1, vbar_tbl4_tot_col2)
+
+    p_ctbl4 = column(Div(text = "<H3 style=\"text-align:center;\">" + COLUMN_7 + "\t&\t" + COLUMN_8 + "</H3>"), p_tbl4)
+
+    MEM_OBJECT_GRIDPLOT = gridplot([[p_ctbl1, 
         line1_tbl1_daily, 
         line1_tbl1_hourly_7_day], 
-        [vbar_tbl2_tot_col1, 
-        vbar_tbl2_tot_col2, 
+        [p_ctbl2, 
         line2_tbl2_daily,
         line2_tbl2_hourly_7_day],
-        [vbar_tbl3_tot_col1,
-        vbar_tbl3_tot_col2,
+        [p_ctbl3,
         line3_tbl3_daily,
         line3_tbl3_hourly_7_day],
-        [vbar_tbl4_tot_col1,
-        vbar_tbl4_tot_col2,
+        [p_ctbl4,
         line4_tbl4_daily,
         line4_tbl4_hourly_7_day]], toolbar_location='right')
 
-    show(MEM_OBJECT_GRIDPLOT)
+    show(column(Div(text = "<H1 style=\"text-align:center;border:1px solid red;color:yellow;background-color: darkblue;\">" + DAILY_TBL + " & " + HOURLY_TBL + "</H1>"), MEM_OBJECT_GRIDPLOT))
 
