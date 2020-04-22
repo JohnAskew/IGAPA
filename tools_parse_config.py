@@ -39,9 +39,17 @@ class ParseConfig:
 
             print("# config.ini not found or is not readable.")
 
+            print("# This program was looking for:", x)
+
+            print("#")
+
             print("# Ensure config.ini exists in this directory:", os.getcwd())
 
-            print("# Here is the attempted command:", y)
+            print("# ---> Does config.ini exist?")
+
+            print("# ---> Is config.ini a readable file?")
+
+            print("# Here is the output from attempted config file read:", y)
 
             print("# Aborting with no action taken.")
 
