@@ -31,7 +31,7 @@ except:
     print("########################################")
 
     print()
-
+    
     sys.exit(0)
 
 try:
@@ -73,6 +73,37 @@ except:
     os.system('pip install datetime')
 
     from datetime import datetime as dt
+
+try:
+    
+    import configparser
+
+except:
+    
+    os.system('pip install configparser')
+    
+    import configparser
+
+try:
+
+    from tools_parse_config import ParseConfig
+
+except:
+    
+    msg = "Unable to find tools_parse_config.py"
+
+    print("#######################################")
+
+    print("# ERROR in", os.path.basename(__file__))
+    
+    print(msg)
+
+    print("#", os.path.basename(__file__), "aborting with no action taken.")
+
+    print("#######################################")
+
+    sys.exit(0)
+
 #----------------------------------------------------------------Variables
 
 if __name__ == "__main__":
@@ -102,9 +133,39 @@ myTicket= a.ticket_validate_number() # Your ticket: EXA-1234x
 
 work_ticket = 0
 
-user = '<user>'     # JIRA user
+class_chart = "DB_SIZE"
 
-pasw = '<secret>' # JIRA password
+try:
+
+    b = ParseConfig(class_chart)
+
+except Exception as e:
+
+    print("#######################################")
+
+    print("FATAL:", os.path.basename(__file__))
+
+    print("# Unable to reference ParseConfig using:")
+
+    print("# b = ParseConfig(class_chart)")
+
+    print("# Does pgm tools_parse_config.py exist in", os.getcwd(),"?" )
+
+    print("# Aborting with no action taken.")
+
+    print("#######################################")
+
+    print(e)
+
+    sys.exit(0)
+
+user, pasw = b.read_config_admin_admin('.', 'config_admin.ini')
+
+print("#######################################")
+
+print("# INFO:", os.path.basename(__file__),"using JIRA credentials for user", user)
+
+print("#######################################")
 
 jiraURL = 'https://www.exasol.com/support/rest/api/2/issue/EXA-'
 
@@ -270,4 +331,5 @@ def main() :
     os.chdir(save_dir)
 
 if __name__ == "__main__" :
+
     main() 

@@ -265,6 +265,17 @@ if len(config_sections) == 0:
 
     sys.exit(0)
 
+print("#######################################")
+
+print("# INFO:", os.path.basename(__file__))
+
+print("# Received these sections from tool_parse_config:")
+
+print("#", config_sections)
+
+print("#######################################")
+
+print()
 
 #######################################
 # LOOP for duration of the program

@@ -97,8 +97,6 @@ for table in range(len(DAILY_TBLZ)):
 
     HOURLY_TBLZ[table] = str(HOURLY_TBLZ[table] + '.csv')
 
-print(DAILY_TBLZ)
-
 os.chdir(dir_path)
 
 print("#####################################")
