@@ -129,6 +129,20 @@ except:
 
 save_dir = os.getcwd()
 
+#DEBUG print("#######################################")
+
+#DEBUG print("# DEBUG:", os.path.basename(__file__), "has len(sys.argv) of", len(sys.argv))
+
+#DEBUG if len(sys.argv) > 1:
+
+#DEBUG     print("# DEBUG", os.path.basename(__file__), "has sys.argv[1]", sys.argv[1])
+
+#DEBUG if len(sys.argv) > 2:
+
+#DEBUG     print("# DEBUG", os.path.basename(__file__), "has sys.argv[2]", sys.argv[2])
+
+#DEBUG print("#######################################")
+
 if __name__ == "__main__":
 
     if len(sys.argv) > 1:
@@ -141,16 +155,28 @@ if __name__ == "__main__":
 
     if len(sys.argv) > 2:
 
-        class_chart = sys.argv[2]
+        class_chart = 'DB_SIZE'
+
+        config_in   = sys.argv[2]
 
     else:
 
         class_chart = 'DB_SIZE'
+
+        config_in = 'config_reports.ini'
 else:
    
     in_ticket = sys.argv[1]
 
-    class_chart = sys.argv[2]
+    config_in = sys.argv[2]
+
+    print("#######################################")
+
+    print("# INFO:", os.path.basename(__file__))
+
+    print("# received these arguments: in_ticket", in_ticket, "config_in:", config_in)
+
+    print("#######################################")
 
 
 
@@ -223,7 +249,7 @@ largeplotHeight = 565 #600
 
 try:
 
-    b = ParseConfig(class_chart)
+    b = ParseConfig(class_chart, config_in)
 
 except Exception as e:
 
@@ -288,9 +314,10 @@ print()
 # 
 ########################################
 
+
 for config_section in config_sections:
 
-    process_section = ParseConfig(config_section)
+    process_section = ParseConfig(config_section, config_in)
 
     CONFIG_HOURLY_TBL,CONFIG_DAILY_TBL,CONFIG_ROW1_COL_X_AXIS,CONFIG_ROW1_COL_Y_AXIS_1,CONFIG_ROW1_COL_Y_AXIS_2,CONFIG_ROW2_COL_X_AXIS,CONFIG_ROW2_COL_Y_AXIS_1,CONFIG_ROW2_COL_Y_AXIS_2,CONFIG_ROW3_COL_X_AXIS,CONFIG_ROW3_COL_Y_AXIS_1,CONFIG_ROW3_COL_Y_AXIS_2,CONFIG_ROW4_COL_X_AXIS,CONFIG_ROW4_COL_Y_AXIS_1,CONFIG_ROW4_COL_Y_AXIS_2 = process_section.run(save_dir)
 

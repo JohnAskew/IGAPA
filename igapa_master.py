@@ -27,8 +27,6 @@ global in_ticket
 
 in_ticket = ""
 
-print("dir_path", dir_path)
-
 if __name__ == "__main__":
 
     if len(sys.argv) > 1:
@@ -43,11 +41,21 @@ if __name__ == "__main__":
 
         new_dir = str("EXA-" + str(in_ticket))
 
+    if len(sys.argv) > 2:
+
+        config_in = sys.argv[2]
+
+    else:
+
+        config_in = 'config_reports.ini'
+
 else:
 
     in_ticket - 28615
 
     new_dir = str("EXA-" + str(in_ticket))
+
+    config_in = 'config_reports.ini'
 
 #######################################
 # Send ticket to extract attachments
@@ -119,7 +127,7 @@ if (
      (os.path.exists(work_dir + '\\' + DAILY_TBLZ[3])  and (os.path.exists(work_dir + '\\' + HOURLY_TBLZ[3]))) 
     ):
 
-        subprocess.call(["python", dir_path + "/" + "subr_chart_4_rows.py", str(in_ticket)])
+        subprocess.call(["python", dir_path + "/" + "subr_chart_4_rows.py", str(in_ticket), str(config_in)])
 
 else:
 

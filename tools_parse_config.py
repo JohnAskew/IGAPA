@@ -14,10 +14,14 @@ except:
 class ParseConfig:
 #######################################
 #-------------------------------------#
-    def __init__(self, myconfig):
+    def __init__(self, myconfig, which_config = 'config_reports.ini'):
 #-------------------------------------#
 
         self.myconfig = myconfig
+
+        self.which_config = which_config
+
+        print("# DEBUG", os.path.basename(__file__), "ParseConfig received which_config:", self.which_config)
 
 #-------------------------------------#
     def read_config_admin_admin(self, path = '.', config_admin = 'config_admin.ini'):
@@ -91,7 +95,7 @@ class ParseConfig:
 
         config = configparser.ConfigParser()
 
-        x = (self.path + '/config_reports.ini')
+        x = (self.path + '\\' + self.which_config)
 
         y = config.read(x)
 
@@ -101,17 +105,17 @@ class ParseConfig:
 
             print("# FATAL:", os.path.basename(__file__))
 
-            print("# config_reports.ini not found or is not readable.")
+            print("#", self.which_config, "not found or is not readable.")
 
             print("# This program was looking for:", x)
 
             print("#")
 
-            print("# Ensure config_reports.ini exists in this directory:", os.getcwd())
+            print("# Ensure ini files exists in this directory:", os.getcwd())
 
-            print("# ---> Does config_reports.ini exist?")
+            print("# ---> Does", self.which_config, "exist?")
 
-            print("# ---> Is config_reports.ini a readable file?")
+            print("# ---> Is", self.which_config, "a readable file?")
 
             print("# Here is the output from attempted config file read:", y)
 
@@ -164,7 +168,7 @@ class ParseConfig:
         
         config = configparser.ConfigParser()
 
-        q = (self.path + '\\' + 'config_reports.ini')
+        q = (self.path + '\\' + self.which_config)
 
         try:
 
@@ -226,7 +230,7 @@ class ParseConfig:
 #######################################
 if __name__ == '__main__':
 
-    a = ParseConfig('DB_SIZE')
+    a = ParseConfig('DB_SIZE', 'config_report2.ini')
 
     user, passwd  = a.read_config_admin_admin('.', 'config_admin.ini')
 
