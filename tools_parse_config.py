@@ -21,7 +21,7 @@ class ParseConfig:
 
         self.which_config = which_config
 
-        print("# DEBUG", os.path.basename(__file__), "ParseConfig received which_config:", self.which_config)
+        #DEBUG print("# DEBUG", os.path.basename(__file__), "ParseConfig received which_config:", self.which_config)
 
 #-------------------------------------#
     def read_config_admin_admin(self, path = '.', config_admin = 'config_admin.ini'):
@@ -85,7 +85,72 @@ class ParseConfig:
 
         return (user, passwd)
 
+#-------------------------------------#
+    def read_config_admin_layout(self, path = '.', config_admin = 'config_admin.ini'):
+#-------------------------------------#
 
+        self.path = path
+
+        self.config_admin = config_admin
+
+        config = configparser.ConfigParser()
+
+        x = (self.path + '/' + self.config_admin)
+
+        y = config.read(x)
+
+        if len(y) == 0:
+
+            print("#######################################")
+
+            print("# FATAL:", os.path.basename(__file__))
+
+            print("# config_admin.ini not found or is not readable.")
+
+            print("# This program was looking for:", x)
+
+            print("#")
+
+            print("# Ensure config_admin.ini exists in this directory:", os.getcwd())
+
+            print("# ---> Does config_admin.ini exist?")
+
+            print("# ---> Is config_admin.ini a readable file?")
+
+            print("# Here is the output from attempted config file read:", y)
+
+            print("# Aborting with no action taken.")
+
+            print("#######################################")
+
+            sys.exit(0)
+        
+        try:
+
+            legend_font_size   = config.get('MASTER-LAYOUT', 'legend_font_size')
+            legend_location    = config.get('MASTER-LAYOUT', 'legend_location')
+            plotWidth          = config.get('MASTER-LAYOUT', 'plotWidth')
+            plotHeight         = config.get('MASTER-LAYOUT', 'plotHeight')
+            smallplotWidth     = config.get('MASTER-LAYOUT', 'smallplotWidth')
+            smallplotHeight    = config.get('MASTER-LAYOUT', 'smallplotHeight')
+            largeplotWidth     = config.get('MASTER-LAYOUT', 'largeplotWidth')
+            largeplotHeight    = config.get('MASTER-LAYOUT', 'largeplotHeight')
+   
+        except Exception as e:
+
+            print("#######################################")
+
+            print("# ERROR:", os.path.basename(__file__), "config_admin.ini", self.config_admin, "")
+
+            pass_fail = False
+
+            print("#######################################")
+
+            print(e)
+
+            sys.exit(0)
+
+        return (legend_font_size, legend_location, plotWidth, plotHeight, smallplotWidth, smallplotHeight, largeplotWidth, largeplotHeight)
 
 #-------------------------------------#
     def read_config_sections(self, path = '.'):
@@ -230,11 +295,15 @@ class ParseConfig:
 #######################################
 if __name__ == '__main__':
 
-    a = ParseConfig('DB_SIZE', 'config_report2.ini')
+    a = ParseConfig('DB_SIZE', 'config_reports.ini')
 
     user, passwd  = a.read_config_admin_admin('.', 'config_admin.ini')
 
-    print("config_admin.ini has user", user, "password", passwd)
+    print("config_admin.ini has section ADMIN user", user, "password", passwd)
+
+    legend_font_size, legend_location, plotWidth, plotHeight, smallplotWidth, smallplotHeight, largeplotWidth, largeplotHeight = a.read_config_admin_layout('.', 'config_admin.ini')
+
+    print("config_admin.ini has section MASTER-LAYOUT with", legend_font_size, legend_location, plotWidth, plotHeight, smallplotWidth, smallplotHeight, largeplotWidth, largeplotHeight)
 
     a.read_config_sections('.')
 

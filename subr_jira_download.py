@@ -309,20 +309,35 @@ def main() :
         sys.exit(0)
 
     else:
+        
         for i in data['fields']['attachment'] :
+
              attachment_final_url = i['content']
+            
              attachment_filename = i['filename']
+            
              status_attachment_name = 'OK: The desired attachment exists: ' + attachment_filename
+            
              print(attachment_final_url)
+            
              attachment_name = False
+            
              attachment_amount = False
+            
              attachment_files = False
+            
              if attachment_final_url != "" :
+            
                  r = requests.get(attachment_final_url, auth=(user, pasw), stream=True)
+            
                  with open(attachment_filename, "wb") as f:
+            
                      f.write(r.content.decode('iso-8859-1').encode('utf8'))
+            
                  f.close()
+            
              else:
+            
                print ("no file")
 
     #-------------------------------------#

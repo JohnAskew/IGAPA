@@ -231,22 +231,6 @@ N_hours = 168                          #HOURLY SYS Table over past week
 
 N_hourly_days = 7                      #Needs to match N_hours 
 
-legend_font_size = "9px"
-
-legend_location  = 'top_left'
-
-plotWidth=400
-
-plotHeight=400 #300
-
-smallplotWidth = 400
-
-smallplotHeight = 250 #400
-
-largeplotWidth = 700  #800
- 
-largeplotHeight = 565 #600
-
 try:
 
     b = ParseConfig(class_chart, config_in)
@@ -302,6 +286,38 @@ print("#", config_sections)
 print("#######################################")
 
 print()
+
+
+# legend_font_size = "9px"
+
+# legend_location  = 'top_left'
+
+# plotWidth=400
+
+# plotHeight=400 #300
+
+# smallplotWidth = 400
+
+# smallplotHeight = 250 #400
+
+# largeplotWidth = 700  #800
+ 
+# largeplotHeight = 565 #600
+
+legend_font_size, legend_location, plotWidth, plotHeight, smallplotWidth, smallplotHeight, largeplotWidth, largeplotHeight = b.read_config_admin_layout(save_dir, 'config_admin.ini')
+
+plotWidth       = int(plotWidth)
+
+plotHeight      = int(plotHeight)
+
+smallplotWidth  = int(smallplotWidth)
+
+smallplotHeight = int(smallplotHeight)
+
+largeplotWidth  = int(largeplotWidth)
+
+largeplotHeight = int(largeplotHeight)
+
 
 #######################################
 # LOOP for duration of the program
