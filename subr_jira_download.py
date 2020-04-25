@@ -270,6 +270,8 @@ def main() :
 
     try:
         
+        logging.info("# " + os.path.basename(__file__) + " making URL Call: " + jiraURL + myTicket)
+
         r = requests.get(jiraURL+myTicket, auth=(user, pasw),timeout=5)
 
     except Exception as e:

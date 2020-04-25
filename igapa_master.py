@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     else:
 
-        in_ticket = 28615
+        in_ticket = 28727
 
         new_dir = str("EXA-" + str(in_ticket))
 
@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
 else:
 
-    in_ticket - 28615
+    in_ticket - 28727
 
     new_dir = str("EXA-" + str(in_ticket))
 
@@ -88,7 +88,7 @@ logging_filename = str(os.path.basename(__file__) + '.log')
 
 if os.path.exists(logging_filename):
 
-    dest = str(logging_filename + '.' + now)
+    dest = str(logging_filename + '_' + now + '.log')
 
     try:
 
@@ -98,11 +98,11 @@ if os.path.exists(logging_filename):
 
         print("#--------------------------------------#")
 
-        print("# " + os.path.basename(__file__) + " Unable to rename " + logging_filename + " to " + dest)
+        print("# WARNING: " + os.path.basename(__file__) + " Unable to rename " + logging_filename + " to " + dest)
 
         print("# " + os.path.basename(__file__) + " REUSING " + logging_filename)
 
-        print(e, exc_info = True)
+        print(e)
 
         print("#--------------------------------------#")
 
