@@ -80,9 +80,8 @@ else:
 
     config_in = 'config_reports.ini'
 
-
 #######################################
-# Log the beginning of processsing
+# Save off the old report - do no overlay
 #######################################
 
 logging_filename = str(os.path.basename(__file__) + '.log')
@@ -91,13 +90,33 @@ if os.path.exists(logging_filename):
 
     dest = str(logging_filename + '.' + now)
 
-    os.rename(logging_filename, dest)
+    try:
+
+        os.rename(logging_filename, dest)
+
+    except Exception as e:
+
+        print("#--------------------------------------#")
+
+        print("# " + os.path.basename(__file__) + " Unable to rename " + logging_filename + " to " + dest)
+
+        print("# " + os.path.basename(__file__) + " REUSING " + logging_filename)
+
+        print(e, exc_info = True)
+
+        print("#--------------------------------------#")
+
+
+#######################################
+# Log the beginning of processsing
+#######################################
+
 
 logging.basicConfig(level = logging.INFO, filename = logging_filename, filemode = 'a', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
 
 logging.info("#####################################")
 
-msg_info = "# " + os.path.basename(__file__) + " started at " + now
+msg_info = "# Starting " + os.path.basename(__file__)
 
 logging.info(msg_info)
 
@@ -113,15 +132,15 @@ else:
 
     logging.error("# " + os.path.basename(__file__)) 
 
-    logging.error("# Could not find config file: " + config_in)
+    logging.error("# " + os.path.basename(__file__) + " Could not find config file: " + config_in)
 
-    logging.error("# Ensure " + config_in + " exists in this directory: " + os.getcwd())
+    logging.error("# " + os.path.basename(__file__) + " Ensure " + config_in + " exists in this directory: " + os.getcwd())
 
     logging.error("# ---> Does " + config_in + " exist?")
 
     logging.error("# ---> Is "  + config_in + " a readable file?")
 
-    logging.error("# Aborting with no action taken")
+    logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken")
 
     logging.error("#####################################")
 
@@ -137,7 +156,7 @@ else:
 
     print("# ---> Is "  + config_in + " a readable file?")
 
-    print("# Aborting with no action taken")
+    print("# " + os.path.basename(__file__) + " Aborting with no action taken")
 
     print("#####################################")
 
@@ -164,7 +183,19 @@ msg_info = "# Executing call " + dir_path + '\\' + "subr_jira_download.py " + st
 
 logging.info(msg_info)
 
-subprocess.call(["python", dir_path + "/" + "subr_jira_download.py", str(in_ticket)])
+subr_rc = subprocess.call(["python", dir_path + "/" + "subr_jira_download.py", str(in_ticket)])
+
+if subr_rc != 0:
+
+    logging.error("# " + os.path.basename(__file__) + " received return code " + str(subr_rc) + " from subr_jira_download.py")
+
+    logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
+
+    print("# " + os.path.basename(__file__) + " Aborting after receiving subr_rc:" + str(subr_rc) + " from subr_jira_download.py")
+
+    print("#####################################")
+
+    sys.exit(-1)
 
 #######################################
 # Return to processing the attachments
@@ -238,7 +269,7 @@ if (
 
         logging.info(msg_info)
 
-        subprocess.call(["python", dir_path + "/" + "subr_chart_4_rows.py", str(in_ticket), str(config_in)])
+        subr_rc = subprocess.call(["python", dir_path + "/" + "subr_chart_4_rows.py", str(in_ticket), str(config_in)])
 
 else:
 

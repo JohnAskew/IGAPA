@@ -37,29 +37,28 @@ logging_filename = "igapa_master.py.log"
 
 logging.basicConfig(filename = logging_filename, level=logging.INFO, filemode = 'a', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
 
-logging.info(("#------------------------------------#"))
-
-logging.info("# Entering " + os.path.basename(__file__))
-
-logging.info(("#------------------------------------#"))
 
 #######################################
 class ticket_validation:
 #######################################
 
 #--------------------------------------
-    def __init__(self, ticket_number):
+    def __init__(self, ticket_number = 28615):
 #--------------------------------------
 
         self.ticket_number = ticket_number
 
+        logging.info(("#------------------------------------#"))
+
         logging.info("# Entering " + os.path.basename(__file__) + " Class ticket_validation with ticket_number " + str(self.ticket_number))
+
+        logging.info(("#------------------------------------#"))
 
 #--------------------------------------
     def ticket_validate_number(self):
 #--------------------------------------
 
-        logging.info("# Entering " + os.path.basename(__file__) + " method: ticket_validate_number with ticket_number " + str(self.ticket_number))
+        logging.info("# " + os.path.basename(__file__) + " method: ticket_validate_number with ticket_number " + str(self.ticket_number))
 
 
         if len(str(self.ticket_number))  == 0 or __name__ == "__main__" :
@@ -96,7 +95,7 @@ class ticket_validation:
 
             print("#########################################")
 
-            sys.exit(0)
+            sys.exit(-1)
 
         else:
 
@@ -105,6 +104,17 @@ class ticket_validation:
                 if len(str(self.ticket_number)) <=5 and isinstance(int(self.ticket_number), numbers.Number):
 
                     myTicket = self.ticket_number
+
+                    logging.info("# " + os.path.basename(__file__) + " validated and returning with: " + str(myTicket))
+
+
+                    logging.info("#-------------------------------------#")
+
+                    logging.info("# " + os.path.basename(__file__) + " successfully exited.")
+
+                    logging.info("#-------------------------------------#")
+
+                    return myTicket
 
             except Exception as e:
 
@@ -140,15 +150,15 @@ class ticket_validation:
 
                             print("#########################################")
 
-                            sys.exit(0)
+                            sys.exit(-1)
 
 
 
-        logging.info(os.path.basename(__file__) + " validated " + self.ticket_number)
+        # logging.info(os.path.basename(__file__) + " validated and returning (exit pgm) with: " + str(myTicket))
 
-        logging.info("#-------------------------------------#")
+        # logging.info("#-------------------------------------#")
 
-        return myTicket
+        # return myTicket
 
 #######################################
 # M A I N   L O G I C
@@ -168,8 +178,8 @@ if __name__ == "__main__" :
 
     print("#######################################")
 
-logging.info(("#------------------------------------#"))
+    logging.info(("#------------------------------------#"))
 
-logging.info("# " + os.path.basename(__file__) + " successfully exited")
+    logging.info("# " + os.path.basename(__file__) + " successfully exited")
 
-logging.info(("#------------------------------------#"))
+    logging.info(("#------------------------------------#"))

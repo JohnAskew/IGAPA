@@ -48,13 +48,6 @@ logging_filename = "igapa_master.py.log"
 
 logging.basicConfig(filename = logging_filename, level=logging.INFO, filemode = 'a', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
 
-logging.info("#--------------------------------------#")
-
-logging.info("# Entering " + os.path.basename(__file__))
-
-logging.info(("#--------------------------------------#"))
-
-
 #######################################
 class ParseConfig:
 #######################################
@@ -65,6 +58,12 @@ class ParseConfig:
         self.myconfig = myconfig
 
         self.which_config = which_config
+
+        logging.info("#--------------------------------------#")
+
+        logging.info("# Entering " + os.path.basename(__file__))
+
+        logging.info("#--------------------------------------#")
 
         logging.info("# " + os.path.basename(__file__) + " Class ParseConfig received section heading: " + self.myconfig + " using this config file: " + self.which_config)
 
