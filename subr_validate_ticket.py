@@ -11,6 +11,30 @@ except:
 
     import numbers
 
+try:
+
+    import logging
+
+except:
+
+    os.system('pip install logging')
+
+    import logging
+
+try:
+
+    from datetime import datetime as dt
+
+except:
+
+    os.system('pip install datetime')
+
+    from datetime import datetime as dt
+
+now = dt.today().strftime('%Y-%m-%d-%H:%M:%S')
+
+logging.basicConfig(filename = os.path.basename(__file__) + '.log', level=logging.INFO, filemode = 'w', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+
 #######################################
 class ticket_validation:
 #######################################
@@ -31,15 +55,29 @@ class ticket_validation:
 
         if len(str(self.ticket_number)) > 1 and len(str(self.ticket_number)) > 5:
 
+            logging.error("#########################################")
+
+            logging.error("# Error: " + os.path.basename(__file__))
+
+            logging.error("# TICKET EXA-xxx expecting up to 5 numbers.")
+
+            logging.error("# ---> Example: 12345")
+
+            logging.error("# received: " + self.ticket_number)
+
+            logging.error("# Aborting with no action taken")
+
+            logging.error("#########################################")
+
             print("#########################################")
 
-            print("# Error:", os.path.basename(__file__))
+            print("# Error: " + os.path.basename(__file__))
 
             print("# TICKET EXA-xxx expecting up to 5 numbers.")
 
             print("# ---> Example: 12345")
 
-            print("# received:", self.ticket_number)
+            print("# received: " + self.ticket_number)
 
             print("# Aborting with no action taken")
 
@@ -57,27 +95,45 @@ class ticket_validation:
 
             except Exception as e:
 
+                            logging.error("#########################################")
+
+                            logging.error("# Error: " + os.path.basename(__file__))
+
+                            logging.error("# TICKET EXA-xxx expecting all numbers.")
+
+                            logging.error("# ---> Example: 12345")
+
+                            logging.error("# received: " + self.ticket_number)
+
+                            logging.error("# Aborting with no action taken")
+
+                            logging.error(e , exc_info=True)
+
+                            logging.error("#########################################")
+
                             print("#########################################")
 
-                            print("# Error:", os.path.basename(__file__))
+                            print("# Error: " + os.path.basename(__file__))
 
                             print("# TICKET EXA-xxx expecting all numbers.")
 
                             print("# ---> Example: 12345")
 
+                            print("# received: " + self.ticket_number)
+
                             print("# Aborting with no action taken")
 
-                            print("# Error:\n" + "#", e)
+                            print(e )
 
                             print("#########################################")
 
                             sys.exit(0)
 
-        print("#-------------------------------------#")
+        logging.info("#-------------------------------------#")
 
-        print(os.path.basename(__file__), "validated", self.ticket_number)
+        logging.info(os.path.basename(__file__) + " validated " + self.ticket_number)
 
-        print("#-------------------------------------#")
+        logging.info("#-------------------------------------#")
 
         return myTicket
 
@@ -91,8 +147,8 @@ if __name__ == "__main__" :
 
     b = a.ticket_validate_number()
 
-    print("#######################################")
+    logging.info("#######################################")
 
-    print("# INFO:", os.path.basename(__file__), "executed as MAIN pgm and self processed", b)
+    logging.info("# " + os.path.basename(__file__) + " executed as MAIN pgm and self processed " + str(b))
 
-    print("#######################################")
+    logging.info("#######################################")

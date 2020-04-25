@@ -15,6 +15,29 @@ except:
 
     import subprocess
 
+try:
+
+    import logging
+
+except:
+
+    os.system('pip install logging')
+
+    import logging
+
+try:
+
+    from datetime import datetime as dt
+
+except:
+
+    os.system('pip install datetime')
+
+    from datetime import datetime as dt
+
+now = dt.today().strftime('%Y-%m-%d-%H:%M:%S')
+
+
 #######################################
 # VARIABLES
 #######################################
@@ -57,11 +80,27 @@ else:
 
     config_in = 'config_reports.ini'
 
+
 #######################################
 # Send ticket to extract attachments
 #######################################
+#######################################
+# Log the beginning of processsing
+#######################################
 
-print("#####################################")
+logging_filename = str(os.path.basename(__file__) + '.log')
+
+logging.basicConfig(level = logging.INFO, filename = logging_filename, filemode = 'w', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+
+logging.info("#####################################")
+
+msg_info = "# " + os.path.basename(__file__) + " started at " + now
+
+logging.info(msg_info)
+
+msg_info = "# " + os.path.basename(__file__) + " is calling jira_download.py with " + str(in_ticket)
+
+logging.info(msg_info)
 
 print("# INFO:", os.path.basename(__file__))
 
@@ -71,6 +110,10 @@ print("#####################################")
 
 print()
 
+msg_info = "# Executing call " + dir_path + '\\' + "subr_jira_download.py " + str(in_ticket)
+
+logging.info(msg_info)
+
 subprocess.call(["python", dir_path + "/" + "subr_jira_download.py", str(in_ticket)])
 
 #######################################
@@ -78,6 +121,14 @@ subprocess.call(["python", dir_path + "/" + "subr_jira_download.py", str(in_tick
 #######################################
 
 work_dir = os.path.join(dir_path, new_dir)
+
+msg_info = "# " + os.path.basename(__file__) + " received ticket: " + str(in_ticket) + " creating new_dir " + new_dir
+
+logging.info(msg_info)
+
+msg_info = "# Current directory is " + os.getcwd() + "  Working directory is " + new_dir + "  Output_dir: " + work_dir
+
+logging.info(msg_info)
 
 print("#####################################")
 
@@ -107,6 +158,10 @@ for table in range(len(DAILY_TBLZ)):
 
 os.chdir(dir_path)
 
+msg_info = "# " + os.path.basename(__file__) + " processing igapa pgms in directory " + os.getcwd()
+
+logging.info(msg_info)
+
 print("#####################################")
 
 print("#INFO:", os.path.basename(__file__))
@@ -127,11 +182,51 @@ if (
      (os.path.exists(work_dir + '\\' + DAILY_TBLZ[3])  and (os.path.exists(work_dir + '\\' + HOURLY_TBLZ[3]))) 
     ):
 
+        msg_info = "# calling python " + dir_path + "\\" + "subr_chart_4_rows.py " + str(in_ticket)  + " " + str(config_in)
+
+        logging.info(msg_info)
+
         subprocess.call(["python", dir_path + "/" + "subr_chart_4_rows.py", str(in_ticket), str(config_in)])
 
 else:
 
     print("#####################################")
+
+    msg_info = "#####################################"
+
+    logging.warning(msg_info)
+ 
+    msg_info = "# WARNING: " + os.path.basename(__file__)
+
+    logging.warning(msg_info)
+
+    logging.warning("# ===> Check other logs for ERRORS!")
+
+    logging.warning("# processed ticket:\t " +  new_dir)
+
+    logging.warning("# BUT did not find any usable CSV files for")
+
+    logging.warning("# generating charts. Ending processing without any charts.")
+
+    logging.warning("#")
+
+    logging.warning("# This solution is looking for either: ")
+
+    logging.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[0]) + " and " +  str(new_dir + '\\' + HOURLY_TBLZ[0]) )
+
+    logging.warning("# OR")
+
+    logging.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[1]) +" and " +  str(new_dir + '\\' + HOURLY_TBLZ[1]) )
+
+    logging.warning("# OR")
+
+    logging.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[2]) + " and " +  str(new_dir + '\\' + HOURLY_TBLZ[2]) )
+
+    logging.warning("# OR")
+
+    logging.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[3]) + " and " +  str(new_dir + '\\' + HOURLY_TBLZ[3]) )
+
+    logging.warning("#####################################")
 
     print("# WARNING:", os.path.basename(__file__))
 
