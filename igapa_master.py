@@ -35,7 +35,7 @@ except:
 
     from datetime import datetime as dt
 
-now = dt.today().strftime('%Y-%m-%d-%H:%M:%S')
+now = dt.today().strftime('%Y%m%d_%H%M%S')
 
 
 #######################################
@@ -82,21 +82,71 @@ else:
 
 
 #######################################
-# Send ticket to extract attachments
-#######################################
-#######################################
 # Log the beginning of processsing
 #######################################
 
 logging_filename = str(os.path.basename(__file__) + '.log')
 
-logging.basicConfig(level = logging.INFO, filename = logging_filename, filemode = 'w', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+if os.path.exists(logging_filename):
+
+    dest = str(logging_filename + '.' + now)
+
+    os.rename(logging_filename, dest)
+
+logging.basicConfig(level = logging.INFO, filename = logging_filename, filemode = 'a', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
 
 logging.info("#####################################")
 
 msg_info = "# " + os.path.basename(__file__) + " started at " + now
 
 logging.info(msg_info)
+
+filename = str(os.getcwd() + '\\' + config_in)
+
+if os.path.exists(filename):
+
+    logging.info("# " + os.path.basename(__file__) + " was given config file " + config_in)
+
+else:
+
+    logging.error("#####################################")
+
+    logging.error("# " + os.path.basename(__file__)) 
+
+    logging.error("# Could not find config file: " + config_in)
+
+    logging.error("# Ensure " + config_in + " exists in this directory: " + os.getcwd())
+
+    logging.error("# ---> Does " + config_in + " exist?")
+
+    logging.error("# ---> Is "  + config_in + " a readable file?")
+
+    logging.error("# Aborting with no action taken")
+
+    logging.error("#####################################")
+
+    print("#####################################")
+
+    print("# " + os.path.basename(__file__)) 
+
+    print("# Could not find config file: " + config_in)
+
+    print("# Ensure " + config_in + " exists in this directory: " + os.getcwd())
+
+    print("# ---> Does " + config_in + " exist?")
+
+    print("# ---> Is "  + config_in + " a readable file?")
+
+    print("# Aborting with no action taken")
+
+    print("#####################################")
+
+    sys.exit(0)
+
+
+
+
+
 
 msg_info = "# " + os.path.basename(__file__) + " is calling jira_download.py with " + str(in_ticket)
 
@@ -122,11 +172,13 @@ subprocess.call(["python", dir_path + "/" + "subr_jira_download.py", str(in_tick
 
 work_dir = os.path.join(dir_path, new_dir)
 
+logging.info("#--------------------------------------#")
+
 msg_info = "# " + os.path.basename(__file__) + " received ticket: " + str(in_ticket) + " creating new_dir " + new_dir
 
 logging.info(msg_info)
 
-msg_info = "# Current directory is " + os.getcwd() + "  Working directory is " + new_dir + "  Output_dir: " + work_dir
+msg_info = "# " + os.path.basename(__file__) + " | Current directory is " + os.getcwd() + " | Working directory is " + new_dir + " |  Output_dir: " + work_dir
 
 logging.info(msg_info)
 
@@ -182,7 +234,7 @@ if (
      (os.path.exists(work_dir + '\\' + DAILY_TBLZ[3])  and (os.path.exists(work_dir + '\\' + HOURLY_TBLZ[3]))) 
     ):
 
-        msg_info = "# calling python " + dir_path + "\\" + "subr_chart_4_rows.py " + str(in_ticket)  + " " + str(config_in)
+        msg_info = "# " + os.path.basename(__file__) + " calling python " + dir_path + "\\" + "subr_chart_4_rows.py " + str(in_ticket)  + " " + str(config_in)
 
         logging.info(msg_info)
 
@@ -259,3 +311,7 @@ else:
     print("#", str(new_dir + '\\' + DAILY_TBLZ[3]), "and", str(new_dir + '\\' + HOURLY_TBLZ[3]) )
 
     print("#####################################")
+
+logging.info("# " + os.path.basename(__file__) + " succeessful exit.")
+
+logging.info("#####################################")

@@ -33,7 +33,15 @@ except:
 
 now = dt.today().strftime('%Y-%m-%d-%H:%M:%S')
 
-logging.basicConfig(filename = os.path.basename(__file__) + '.log', level=logging.INFO, filemode = 'w', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+logging_filename = "igapa_master.py.log"
+
+logging.basicConfig(filename = logging_filename, level=logging.INFO, filemode = 'a', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+
+logging.info(("#------------------------------------#"))
+
+logging.info("# Entering " + os.path.basename(__file__))
+
+logging.info(("#------------------------------------#"))
 
 #######################################
 class ticket_validation:
@@ -45,9 +53,14 @@ class ticket_validation:
 
         self.ticket_number = ticket_number
 
+        logging.info("# Entering " + os.path.basename(__file__) + " Class ticket_validation with ticket_number " + str(self.ticket_number))
+
 #--------------------------------------
     def ticket_validate_number(self):
 #--------------------------------------
+
+        logging.info("# Entering " + os.path.basename(__file__) + " method: ticket_validate_number with ticket_number " + str(self.ticket_number))
+
 
         if len(str(self.ticket_number))  == 0 or __name__ == "__main__" :
 
@@ -129,7 +142,7 @@ class ticket_validation:
 
                             sys.exit(0)
 
-        logging.info("#-------------------------------------#")
+
 
         logging.info(os.path.basename(__file__) + " validated " + self.ticket_number)
 
@@ -147,8 +160,16 @@ if __name__ == "__main__" :
 
     b = a.ticket_validate_number()
 
-    logging.info("#######################################")
-
     logging.info("# " + os.path.basename(__file__) + " executed as MAIN pgm and self processed " + str(b))
 
-    logging.info("#######################################")
+    print("#######################################")
+
+    print("# " + os.path.basename(__file__) + " executed as MAIN pgm and self processed " + str(b))
+
+    print("#######################################")
+
+logging.info(("#------------------------------------#"))
+
+logging.info("# " + os.path.basename(__file__) + " successfully exited")
+
+logging.info(("#------------------------------------#"))
