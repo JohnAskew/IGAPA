@@ -195,12 +195,16 @@ else:
     msg_info = "#####################################"
 
     logging.warning(msg_info)
+
+    logging.warning("# ===> Check other logs for ERRORS! <=== ")
+
+    logging.warning("# ===> Check other logs for ERRORS! <=== ")
+
+    logging.warning("# ===> Check other logs for ERRORS! <=== ")
  
     msg_info = "# WARNING: " + os.path.basename(__file__)
 
     logging.warning(msg_info)
-
-    logging.warning("# ===> Check other logs for ERRORS!")
 
     logging.warning("# processed ticket:\t " +  new_dir)
 
