@@ -30,13 +30,36 @@ now = dt.today().strftime('%Y-%m-%d-%H:%M:%S')
 
 logging_filename = "igapa_master.py.log"
 
-logging.basicConfig(filename = logging_filename, level=logging.INFO, filemode = 'a', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+logger = logging.getLogger()
 
-logging.info("#--------------------------------------#")
+logger.setLevel(logging.INFO)
 
-logging.info("# Entering " + os.path.basename(__file__))
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
 
-logging.info(("#--------------------------------------#"))
+fh = logging.FileHandler(logging_filename, mode = 'a')
+
+fh.setLevel(logging.INFO)
+
+fh.setFormatter(formatter)
+
+logger.addHandler(fh)
+
+ch = logging.StreamHandler()
+
+ch.setLevel(logging.INFO)
+
+ch.setFormatter(formatter)
+
+logger.addHandler(ch)
+
+
+
+
+logger.info("#--------------------------------------#")
+
+logger.info("# Entering " + os.path.basename(__file__))
+
+logger.info(("#--------------------------------------#"))
 
 try:
 
@@ -44,17 +67,17 @@ try:
 
 except:
 
-    logging.error("########################################")
+    logger.error("########################################")
 
-    logging.error("# Error: " + os.path.basename(__file__))
+    logger.error("# Error: " + os.path.basename(__file__))
 
-    logging.error("# program subr_validate_ticket.py not found")
+    logger.error("# program subr_validate_ticket.py not found")
 
-    logging.error("# so we are unable to validate the ticket.")
+    logger.error("# so we are unable to validate the ticket.")
 
-    logging.error("# Aborting with no action taken...")
+    logger.error("# Aborting with no action taken...")
 
-    logging.error("########################################")
+    logger.error("########################################")
 
     print()
 
@@ -136,15 +159,15 @@ except:
     
     msg = "Unable to find tools_parse_config.py"
 
-    logging.error("#######################################")
+    logger.error("#######################################")
 
-    logging.error("# ERROR in " +  os.path.basename(__file__))
+    logger.error("# ERROR in " +  os.path.basename(__file__))
     
-    logging.error("# " + msg)
+    logger.error("# " + msg)
 
-    logging.error("# " +  os.path.basename(__file__) + " aborting with no action taken.")
+    logger.error("# " +  os.path.basename(__file__) + " aborting with no action taken.")
 
-    logging.error("#######################################")
+    logger.error("#######################################")
 
     print("#######################################")
 
@@ -168,18 +191,18 @@ if __name__ == "__main__":
 
         in_ticket = sys.argv[1]
 
-        logging.info("# " + os.path.basename(__file__) + " read in parameter in_ticket: " + str(in_ticket))
+        logger.info("# " + os.path.basename(__file__) + " read in parameter in_ticket: " + str(in_ticket))
 
     else:
        
         in_ticket = 28615
 
-        logging.info("# " + os.path.basename(__file__) + " read in parameter in_ticket: " + str(in_ticket))
+        logger.info("# " + os.path.basename(__file__) + " read in parameter in_ticket: " + str(in_ticket))
 else:
 
     in_ticket = sys.argv[1]
 
-    logging.info("# " + os.path.basename(__file__) + " read in parameter in_ticket: " + str(in_ticket))
+    logger.info("# " + os.path.basename(__file__) + " read in parameter in_ticket: " + str(in_ticket))
 
 print("#####################################")
 
@@ -203,21 +226,21 @@ try:
 
 except Exception as e:
 
-    logging.error("#######################################")
+    logger.error("#######################################")
 
-    logging.error("FATAL: " +  os.path.basename(__file__))
+    logger.error("FATAL: " +  os.path.basename(__file__))
 
-    logging.error("# Unable to reference ParseConfig using:")
+    logger.error("# Unable to reference ParseConfig using:")
 
-    logging.error("# b = ParseConfig(class_chart)")
+    logger.error("# b = ParseConfig(class_chart)")
 
-    logging.error("# Does pgm tools_parse_config.py exist in " +  os.getcwd(),"?" )
+    logger.error("# Does pgm tools_parse_config.py exist in " +  os.getcwd(),"?" )
 
-    logging.error("# Aborting with no action taken.")
+    logger.error("# Aborting with no action taken.")
 
-    logging.error(e, exc_info = True)
+    logger.error(e, exc_info = True)
 
-    logging.error("#######################################")
+    logger.error("#######################################")
 
     print("#######################################")
 
@@ -239,7 +262,7 @@ except Exception as e:
 
 user, pasw = b.read_config_admin_admin('.', 'config_admin.ini')
 
-logging.info("# " + os.path.basename(__file__) + " using JIRA credentials for user " + user)
+logger.info("# " + os.path.basename(__file__) + " using JIRA credentials for user " + user)
 
 print("#######################################")
 
@@ -251,7 +274,7 @@ jiraURL = 'https://www.exasol.com/support/rest/api/2/issue/EXA-'
 
 attachment_final_url="" # To validate if there are or not attachments
 
-logging.info("# " + os.path.basename(__file__) + " processing ticket for myTicket: " + str(myTicket))
+logger.info("# " + os.path.basename(__file__) + " processing ticket for myTicket: " + str(myTicket))
 
 print("#--------------------------------------#")
 
@@ -270,23 +293,23 @@ def main() :
 
     try:
         
-        logging.info("# " + os.path.basename(__file__) + " making URL Call: " + jiraURL + myTicket)
+        logger.info("# " + os.path.basename(__file__) + " making URL Call: " + jiraURL + myTicket)
 
         r = requests.get(jiraURL+myTicket, auth=(user, pasw),timeout=5)
 
     except Exception as e:
 
-        logging.error("#####################################")
+        logger.error("#####################################")
 
-        logging.error("# Error " + os.path.basename(__file__))
+        logger.error("# Error " + os.path.basename(__file__))
 
-        logging.error("# " + os.path.basename(__file__) + " Unable to find ticket " +  str(myTicket))
+        logger.error("# " + os.path.basename(__file__) + " Unable to find ticket " +  str(myTicket))
 
-        logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
+        logger.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
 
-        logging.error(e, exc_info = True)
+        logger.error(e, exc_info = True)
 
-        logging.error("#####################################")
+        logger.error("#####################################")
 
         print("#####################################")
 
@@ -326,19 +349,19 @@ def main() :
 
                 os.rename(work_ticket, dest_dir )
 
-                logging.info("# " + os.path.basename(__file__) + " renaming " + str(work_ticket) + " to " + dest_dir)
+                logger.info("# " + os.path.basename(__file__) + " renaming " + str(work_ticket) + " to " + dest_dir)
 
                 print("# INFO:", os.path.basename(__file__), " renaming", work_ticket, "to ", dest_dir)
 
             except:
 
-                logging.warning("#-------------------------------------#")
+                logger.warning("#-------------------------------------#")
 
-                logging.warning("# WARNING: " +  os.path.basename(__file__) + " unable to rename")
+                logger.warning("# WARNING: " +  os.path.basename(__file__) + " unable to rename")
 
-                logging.warning("# from: " +  str(work_ticket) +  " to " +  dest_dir)
+                logger.warning("# from: " +  str(work_ticket) +  " to " +  dest_dir)
 
-                logging.warning("#-------------------------------------#")
+                logger.warning("#-------------------------------------#")
 
                 print("#######################################")
 
@@ -355,7 +378,7 @@ def main() :
 
         work_dir = os.path.join(save_dir, work_ticket)
 
-        logging.info("# " + os.path.basename(__file__) + " saving work in: " + work_dir)
+        logger.info("# " + os.path.basename(__file__) + " saving work in: " + work_dir)
 
         print("# INFO:", os.path.basename(__file__), "saving work in:", work_dir)
 
@@ -369,21 +392,21 @@ def main() :
 
     else:
 
-        logging.error("#####################################")
+        logger.error("#####################################")
 
-        logging.error("# " + os.path.basename(__file__) + " Error: accessing JIRA with return code: " + str(rstatus))
+        logger.error("# " + os.path.basename(__file__) + " Error: accessing JIRA with return code: " + str(rstatus))
 
-        logging.error("# " + os.path.basename(__file__) + " Unable to process ticket " +  work_ticket)
+        logger.error("# " + os.path.basename(__file__) + " Unable to process ticket " +  work_ticket)
 
-        logging.error("# ---> Does ticket " + work_ticket + " even exist?")
+        logger.error("# ---> Does ticket " + work_ticket + " even exist?")
 
-        logging.error("# ---> For ticket " + work_ticket + " Do you have access permission on JIRA?")
+        logger.error("# ---> For ticket " + work_ticket + " Do you have access permission on JIRA?")
 
-        logging.error("# " + os.path.basename(__file__) + " had URL read return code: " + str(rstatus))
+        logger.error("# " + os.path.basename(__file__) + " had URL read return code: " + str(rstatus))
 
-        logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
+        logger.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
 
-        logging.error("#####################################")
+        logger.error("#####################################")
 
         print("#####################################")
 
@@ -407,17 +430,17 @@ def main() :
 
         attachment_final_url=""
 
-        logging.warning("#####################################")
+        logger.warning("#####################################")
 
-        logging.warning("# " + os.path.basename(__file__) + " WARNING")
+        logger.warning("# " + os.path.basename(__file__) + " WARNING")
 
-        logging.warning("#  No Attachments found for " +  work_ticket)
+        logger.warning("#  No Attachments found for " +  work_ticket)
 
-        logging.warning("# The folder " +  work_ticket, "will be empty")
+        logger.warning("# The folder " +  work_ticket, "will be empty")
 
-        logging.warning("# and no reports will be run")
+        logger.warning("# and no reports will be run")
 
-        logging.warning("#####################################")
+        logger.warning("#####################################")
 
         print("#####################################")
 
@@ -445,7 +468,7 @@ def main() :
             
              status_attachment_name = 'OK: The desired attachment exists: ' + attachment_filename
             
-             logging.info("# " + os.path.basename(__file__) + " trying to download " + attachment_final_url)
+             logger.info("# " + os.path.basename(__file__) + " trying to download " + attachment_final_url)
 
              print(attachment_final_url)
             
@@ -478,8 +501,8 @@ if __name__ == "__main__" :
 
     main() 
 
-logging.info("#-------------------------------------#")
+logger.info("#-------------------------------------#")
 
-logging.info("# " + os.path.basename(__file__) + " successfully exited")
+logger.info("# " + os.path.basename(__file__) + " successfully exited")
 
-logging.info("#-------------------------------------#")
+logger.info("#-------------------------------------#")

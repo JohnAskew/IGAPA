@@ -111,38 +111,62 @@ if os.path.exists(logging_filename):
 # Log the beginning of processsing
 #######################################
 
+logger = logging.getLogger()
 
-logging.basicConfig(level = logging.INFO, filename = logging_filename, filemode = 'a', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+logger.setLevel(logging.DEBUG)
 
-logging.info("#####################################")
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+
+fh = logging.FileHandler(logging_filename, mode = 'a')
+
+fh.setLevel(logging.DEBUG)
+
+fh.setFormatter(formatter)
+
+logger.addHandler(fh)
+
+ch = logging.StreamHandler()
+
+ch.setLevel(logging.DEBUG)
+
+ch.setFormatter(formatter)
+
+logger.addHandler(ch)
+
+
+
+
+#logger.basicConfig(level = logger.INFO, filename = logging_filename, filemode = 'a', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+
+logger.info("#####################################")
 
 msg_info = "# Starting " + os.path.basename(__file__)
 
-logging.info(msg_info)
+logger.info(msg_info)
 
 filename = str(os.getcwd() + '\\' + config_in)
 
 if os.path.exists(filename):
 
-    logging.info("# " + os.path.basename(__file__) + " was given config file " + config_in)
+    logger.info("# " + os.path.basename(__file__) + " was given config file " + config_in)
 
 else:
 
-    logging.error("#####################################")
+    logger.error("#####################################")
 
-    logging.error("# " + os.path.basename(__file__)) 
+    logger.error("# " + os.path.basename(__file__)) 
 
-    logging.error("# " + os.path.basename(__file__) + " Could not find config file: " + config_in)
+    logger.error("# " + os.path.basename(__file__) + " Could not find config file: " + config_in)
 
-    logging.error("# " + os.path.basename(__file__) + " Ensure " + config_in + " exists in this directory: " + os.getcwd())
+    logger.error("# " + os.path.basename(__file__) + " Ensure " + config_in + " exists in this directory: " + os.getcwd())
 
-    logging.error("# ---> Does " + config_in + " exist?")
+    logger.error("# ---> Does " + config_in + " exist?")
 
-    logging.error("# ---> Is "  + config_in + " a readable file?")
+    logger.error("# ---> Is "  + config_in + " a readable file?")
 
-    logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken")
+    logger.error("# " + os.path.basename(__file__) + " Aborting with no action taken")
 
-    logging.error("#####################################")
+    logger.error("#####################################")
 
     print("#####################################")
 
@@ -169,7 +193,7 @@ else:
 
 msg_info = "# " + os.path.basename(__file__) + " is calling jira_download.py with " + str(in_ticket)
 
-logging.info(msg_info)
+logger.info(msg_info)
 
 print("# INFO:", os.path.basename(__file__))
 
@@ -181,15 +205,15 @@ print()
 
 msg_info = "# Executing call " + dir_path + '\\' + "subr_jira_download.py " + str(in_ticket)
 
-logging.info(msg_info)
+logger.info(msg_info)
 
 subr_rc = subprocess.call(["python", dir_path + "/" + "subr_jira_download.py", str(in_ticket)])
 
 if subr_rc != 0:
 
-    logging.error("# " + os.path.basename(__file__) + " received return code " + str(subr_rc) + " from subr_jira_download.py")
+    logger.error("# " + os.path.basename(__file__) + " received return code " + str(subr_rc) + " from subr_jira_download.py")
 
-    logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
+    logger.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
 
     print("# " + os.path.basename(__file__) + " Aborting after receiving subr_rc:" + str(subr_rc) + " from subr_jira_download.py")
 
@@ -203,15 +227,15 @@ if subr_rc != 0:
 
 work_dir = os.path.join(dir_path, new_dir)
 
-logging.info("#--------------------------------------#")
+logger.info("#--------------------------------------#")
 
 msg_info = "# " + os.path.basename(__file__) + " received ticket: " + str(in_ticket) + " creating new_dir " + new_dir
 
-logging.info(msg_info)
+logger.info(msg_info)
 
 msg_info = "# " + os.path.basename(__file__) + " | Current directory is " + os.getcwd() + " | Working directory is " + new_dir + " |  Output_dir: " + work_dir
 
-logging.info(msg_info)
+logger.info(msg_info)
 
 print("#####################################")
 
@@ -243,7 +267,7 @@ os.chdir(dir_path)
 
 msg_info = "# " + os.path.basename(__file__) + " processing igapa pgms in directory " + os.getcwd()
 
-logging.info(msg_info)
+logger.info(msg_info)
 
 print("#####################################")
 
@@ -267,7 +291,7 @@ if (
 
         msg_info = "# " + os.path.basename(__file__) + " calling python " + dir_path + "\\" + "subr_chart_4_rows.py " + str(in_ticket)  + " " + str(config_in)
 
-        logging.info(msg_info)
+        logger.info(msg_info)
 
         subr_rc = subprocess.call(["python", dir_path + "/" + "subr_chart_4_rows.py", str(in_ticket), str(config_in)])
 
@@ -277,43 +301,43 @@ else:
 
     msg_info = "#####################################"
 
-    logging.warning(msg_info)
+    logger.warning(msg_info)
 
-    logging.warning("# ===> Check other logs for ERRORS! <=== ")
+    logger.warning("# ===> Check other logs for ERRORS! <=== ")
 
-    logging.warning("# ===> Check other logs for ERRORS! <=== ")
+    logger.warning("# ===> Check other logs for ERRORS! <=== ")
 
-    logging.warning("# ===> Check other logs for ERRORS! <=== ")
+    logger.warning("# ===> Check other logs for ERRORS! <=== ")
  
     msg_info = "# WARNING: " + os.path.basename(__file__)
 
-    logging.warning(msg_info)
+    logger.warning(msg_info)
 
-    logging.warning("# processed ticket:\t " +  new_dir)
+    logger.warning("# processed ticket:\t " +  new_dir)
 
-    logging.warning("# BUT did not find any usable CSV files for")
+    logger.warning("# BUT did not find any usable CSV files for")
 
-    logging.warning("# generating charts. Ending processing without any charts.")
+    logger.warning("# generating charts. Ending processing without any charts.")
 
-    logging.warning("#")
+    logger.warning("#")
 
-    logging.warning("# This solution is looking for either: ")
+    logger.warning("# This solution is looking for either: ")
 
-    logging.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[0]) + " and " +  str(new_dir + '\\' + HOURLY_TBLZ[0]) )
+    logger.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[0]) + " and " +  str(new_dir + '\\' + HOURLY_TBLZ[0]) )
 
-    logging.warning("# OR")
+    logger.warning("# OR")
 
-    logging.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[1]) +" and " +  str(new_dir + '\\' + HOURLY_TBLZ[1]) )
+    logger.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[1]) +" and " +  str(new_dir + '\\' + HOURLY_TBLZ[1]) )
 
-    logging.warning("# OR")
+    logger.warning("# OR")
 
-    logging.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[2]) + " and " +  str(new_dir + '\\' + HOURLY_TBLZ[2]) )
+    logger.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[2]) + " and " +  str(new_dir + '\\' + HOURLY_TBLZ[2]) )
 
-    logging.warning("# OR")
+    logger.warning("# OR")
 
-    logging.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[3]) + " and " +  str(new_dir + '\\' + HOURLY_TBLZ[3]) )
+    logger.warning("# " +  str(new_dir + '\\' + DAILY_TBLZ[3]) + " and " +  str(new_dir + '\\' + HOURLY_TBLZ[3]) )
 
-    logging.warning("#####################################")
+    logger.warning("#####################################")
 
     print("# WARNING:", os.path.basename(__file__))
 
@@ -343,6 +367,6 @@ else:
 
     print("#####################################")
 
-logging.info("# " + os.path.basename(__file__) + " succeessful exit.")
+logger.info("# " + os.path.basename(__file__) + " succeessful exit.")
 
-logging.info("#####################################")
+logger.info("#####################################")
