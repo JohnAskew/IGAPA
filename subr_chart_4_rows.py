@@ -120,30 +120,84 @@ except:
 
     print("#######################################")
 
-    sys.exit(0)
-    
-    
+    sys.exit(13)
+
+try:
+
+    import logging
+
+except:
+
+    os.system('pip install logging')
+
+    import logging
+
+try:
+
+    from datetime import datetime as dt
+
+except:
+
+    os.system('pip install datetime')
+
+    from datetime import datetime as dt
+
+now = dt.today().strftime('%Y-%m-%d-%H:%M:%S')
+
+logging_filename = "igapa_master.py.log"
+
+logging.basicConfig(filename = logging_filename, level=logging.INFO, filemode = 'a', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+  
+#######################################
+# FUNCTTIONS BEFORE MAIN CODE
+#######################################
+
+#-------------------------------------#
+def log_and_print_debug(msg):
+#-------------------------------------#
+
+    logging.debug(msg)
+
+    print(msg)
+
+
+#-------------------------------------#
+def log_and_print_info(msg):
+#-------------------------------------#
+
+    logging.info(msg)
+
+    print(msg)
+
+#-------------------------------------#
+def log_and_print_warning(msg):
+#-------------------------------------#
+
+    logging.warning(msg)
+
+    print(msg)
+
+#-------------------------------------#
+def log_and_print_error(msg):
+#-------------------------------------#
+
+    logging.info(msg)
+
+    print(msg)
+
 #######################################
 # Set up processinging logic
 #######################################
 
 save_dir = os.getcwd()
 
-#DEBUG print("#######################################")
-
-#DEBUG print("# DEBUG:", os.path.basename(__file__), "has len(sys.argv) of", len(sys.argv))
-
-#DEBUG if len(sys.argv) > 1:
-
-#DEBUG     print("# DEBUG", os.path.basename(__file__), "has sys.argv[1]", sys.argv[1])
-
-#DEBUG if len(sys.argv) > 2:
-
-#DEBUG     print("# DEBUG", os.path.basename(__file__), "has sys.argv[2]", sys.argv[2])
-
-#DEBUG print("#######################################")
-
 if __name__ == "__main__":
+
+    log_and_print_info("#--------------------------------------#")
+
+    log_and_print_info("# Entering " +  os.path.basename(__file__))
+
+    log_and_print_info("#--------------------------------------#")
 
     if len(sys.argv) > 1:
 
@@ -159,30 +213,56 @@ if __name__ == "__main__":
 
         config_in   = sys.argv[2]
 
+        log_and_print_info("# " + os.path.basename(__file__) + " received these arguments: in_ticket " + str(in_ticket) + " config_in: " + config_in)
+
     else:
 
         class_chart = 'DB_SIZE'
 
         config_in = 'config_reports.ini'
+
+    log_and_print_info("# " + os.path.basename(__file__) + " received these arguments: in_ticket " + str(in_ticket) + " config_in: " + config_in)
+
 else:
    
     in_ticket = sys.argv[1]
 
     config_in = sys.argv[2]
 
-    print("#######################################")
+    log_and_print_info("#------------------------------------#")
+  
+    log_and_print_info("# Entering " +  os.path.basename(__file__))
 
-    print("# INFO:", os.path.basename(__file__))
+    log_and_print_info("#------------------------------------#")
 
-    print("# received these arguments: in_ticket", in_ticket, "config_in:", config_in)
-
-    print("#######################################")
-
+    log_and_print_info("# received these arguments: in_ticket " + str(in_ticket) + " config_in: " + config_in)
 
 
 in_dir = str("EXA-" + str(in_ticket))
 
 if not os.path.exists(in_dir):
+
+    logging.error("#######################################")
+
+    logging.error("# " + os.path.basename(__file__) + " FATAL ERROR " )
+
+    logging.error("#  " + os.path.basename(__file__) + " Needed path " + in_dir)
+
+    logging.error("# is NOT available for " + os.path.basename(__file__))
+
+    logging.error("# --> was directory " + in_dir, "created?")
+
+    logging.error("# --> it is created but not a directory?")
+
+    logging.error("# --> Is it a directory and read-only?")
+
+    logging.error("# *** See subr_jira_download.py for creating needed directory")
+
+    logging.error("#")
+
+    logging.error("#  " + os.path.basename(__file__) + " Aborting with no action taken.")
+
+    logging.error("#######################################")
 
     print("#######################################")
 
@@ -210,7 +290,7 @@ if not os.path.exists(in_dir):
 
     print("#######################################")
 
-    sys.exit(0)
+    sys.exit(13)
 
 
 #######################################
@@ -237,6 +317,22 @@ try:
 
 except Exception as e:
 
+    logging.error("#######################################")
+
+    logging.error("FATAL: " + os.path.basename(__file__))
+
+    logging.error("# " + os.path.basename(__file__) + " Unable to reference ParseConfig using:")
+
+    logging.error("# b = ParseConfig(class_chart)")
+
+    logging.error("# Does pgm tools_parse_config.py exist in " + os.getcwd(),"?" )
+
+    logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
+
+    logging.error(e, exc_info = True)
+
+    logging.error("#######################################")
+
     print("#######################################")
 
     print("FATAL:", os.path.basename(__file__))
@@ -253,11 +349,21 @@ except Exception as e:
 
     print(e)
 
-    sys.exit(0)
+    sys.exit(13)
 
 config_sections = b.read_config_sections(save_dir)
 
 if len(config_sections) == 0:
+
+    logging.error("FATAL: " + os.path.basename(__file__))
+
+    logging.error("# " + os.path.basename(__file__) + " unable to reference ParseConfig using:")
+
+    logging.error("# config_sections = b.read_config_sections()")
+
+    logging.error("# Does pgm tools_parse_config.py exist in " + os.getcwd(),"?" )
+
+    logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
 
     print("#######################################")
 
@@ -273,7 +379,11 @@ if len(config_sections) == 0:
 
     print("#######################################")
 
-    sys.exit(0)
+    sys.exit(13)
+
+for item in config_sections:
+
+    logging.info("# " + os.path.basename(__file__) + " received this section from tool_parse_config: " + item)
 
 print("#######################################")
 
@@ -287,22 +397,6 @@ print("#######################################")
 
 print()
 
-
-# legend_font_size = "9px"
-
-# legend_location  = 'top_left'
-
-# plotWidth=400
-
-# plotHeight=400 #300
-
-# smallplotWidth = 400
-
-# smallplotHeight = 250 #400
-
-# largeplotWidth = 700  #800
- 
-# largeplotHeight = 565 #600
 
 legend_font_size, legend_location, plotWidth, plotHeight, smallplotWidth, smallplotHeight, largeplotWidth, largeplotHeight = b.read_config_admin_layout(save_dir, 'config_admin.ini')
 
@@ -356,21 +450,16 @@ for config_section in config_sections:
     COLS_TBL3 = [COLUMN_DATE, COLUMN_5, COLUMN_6]
     COLS_TBL4 = [COLUMN_DATE, COLUMN_7, COLUMN_8]
 
-    print("#######################################")
+    log_and_print_info("# " + os.path.basename(__file__) + " Processing\tConfig section:\t " + config_section)
 
-    print("# INFO:", os.path.basename(__file__))
+    log_and_print_info("# " + os.path.basename(__file__) + " Processing\tHOURLY_TBL:\t " + HOURLY_TBL)
 
-    print("# Config section:\t", config_section)
-
-    print("# with HOURLY_TBL:\t", HOURLY_TBL)
-
-    print("# and DAILY_TBL:\t",  DAILY_TBL)
-
-    print("#######################################")
+    log_and_print_info("# " + os.path.basename(__file__) + " Processing\tDAILY_TBL:\t " +  DAILY_TBL)
 
     print()
 
-#######################################
+
+    #######################################
 # Set up directory to use
 #######################################
 
@@ -394,6 +483,22 @@ for config_section in config_sections:
 
     except Exception as e:
 
+        logging.error("# FATAL ERROR in " + os.path.basename(__file__))
+
+        logging.error("# ---> File is NOT FOUND!")
+
+        logging.error("# " + os.path.basename(__file__) + " config.ini section:\t " + config_section)
+
+        logging.error("# which specified:\t " + HOURLY_TBL)
+
+        logging.error("# Needs CSV file:\t " + str(HOURLY_TBL + '.csv'))
+
+        logging.error("# in directory:\t\t " + in_dir + ".")
+
+        logging.error("#  " + os.path.basename(__file__) + " Aborting with no action taken.")
+
+        logging.error(e, exc_info = True)
+
         print("#######################################")
 
         print("# FATAL ERROR in", os.path.basename(__file__))
@@ -416,7 +521,7 @@ for config_section in config_sections:
 
         print(e)
 
-        sys.exit(0)
+        sys.exit(13)
 
     try:
 
@@ -427,11 +532,17 @@ for config_section in config_sections:
 
     except Exception as e:
 
+        logging.error("# " + os.path.basename(__file__) + " unable to read " + HOURLY_TBL + " skipping!")
+
+        logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
+
+        logging.error(e, exc_info = True)
+
         print("Unable to READ", HOURLY_TBL, "skipping")
 
         print(e)
 
-        sys.exit(0)
+        sys.exit(13)
 
     #######################################
     # Extract TBL1 Daily Records
@@ -443,6 +554,22 @@ for config_section in config_sections:
 
     except Exception as e:
 
+        logging.error("# FATAL ERROR in " + os.path.basename(__file__))
+
+        logging.error("# ---> File is NOT FOUND!")
+
+        logging.error("# " + os.path.basename(__file__) + " config.ini section:\t " + config_section)
+
+        logging.error("# which specified:\t " + DAILY_TBL)
+
+        logging.error("# Needs CSV file:\t " + str(DAILY_TBL + '.csv'))
+
+        logging.error("# in directory:\t\t " + in_dir + ".")
+
+        logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
+
+        logging.error(e, exc_info = True)
+        
         print("#######################################")
 
         print("# FATAL ERROR in", os.path.basename(__file__))
@@ -465,7 +592,7 @@ for config_section in config_sections:
 
         print(e)
 
-        sys.exit(0)
+        sys.exit(13)
 
 
     try:
@@ -476,11 +603,17 @@ for config_section in config_sections:
 
     except Exception as e:
 
+        logging.error("# " + os.path.basename(__file__) + " unable to read " + DAILY_TBL + " skipping!")
+
+        logging.error("# " + os.path.basename(__file__) + " Aborting with no action taken.")
+
+        logging.error(e, exc_info = True)
+
         print("Unable to read", DAILY_TBL, "skipping")
 
         print(e)
 
-        sys.exit(0)
+        sys.exit(13)
 
     #######################################
     # Read the max df_hourly_full_tbl_1 timestamp
@@ -506,7 +639,7 @@ for config_section in config_sections:
 
         print("#######################################")
 
-        sys.exit(0)
+        sys.exit(13)
 
     date_max_hourly = df_hourly_full_tbl_1[COLUMN_DATE].max()
 
@@ -583,7 +716,7 @@ for config_section in config_sections:
 
         print(e)
 
-        sys.exit(0)
+        sys.exit(13)
 
     #######################################
     # Extract TBL2 Daily Records
@@ -602,7 +735,7 @@ for config_section in config_sections:
 
         print(e)
 
-        sys.exit(0)
+        sys.exit(13)
 
     #######################################
     #  Set COLUMN_DATE as timestamp for Hourly full tbl 2
@@ -669,7 +802,7 @@ for config_section in config_sections:
 
         print(e)
 
-        sys.exit(0)
+        sys.exit(13)
 
     #######################################
     # Extract TBL3 Daily Records
@@ -688,7 +821,7 @@ for config_section in config_sections:
 
         print(e)
 
-        sys.exit(0)
+        sys.exit(13)
 
     #######################################
     # Read the max df_hourly_full_tbl_3 timestamp
@@ -764,7 +897,7 @@ for config_section in config_sections:
 
         print(e)
 
-        sys.exit(0)
+        sys.exit(13)
 
     #######################################
     # Extract TBL4 Daily Records
@@ -783,7 +916,7 @@ for config_section in config_sections:
 
         print(e)
 
-        sys.exit(0)
+        sys.exit(13)
 
     #######################################
     #  Set COLUMN_DATE as timestamp for Hourly full tbl 2
@@ -988,7 +1121,7 @@ for config_section in config_sections:
 
     line1_tbl1_hourly_7_day.title.text_font_size = "15px"
 
-    line1_tbl1_hourly_7_day.title.background_fill_color = "darkblue"##aaaaee"
+    line1_tbl1_hourly_7_day.title.background_fill_color = "darkblue"
 
     line1_tbl1_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_2 , color=("red"),  source=df_hourly_7_day_tbl_1, legend_label = ('HOURLY ' + COLUMN_2) )
 
@@ -1472,3 +1605,22 @@ for config_section in config_sections:
 
     show(column(Div(text = "<H1 style=\"text-align:center;border:1px solid red;color:yellow;background-color: darkblue;\">" + DAILY_TBL + " & " + HOURLY_TBL + "</H1>"), MEM_OBJECT_GRIDPLOT))
 
+    log_and_print_info("#--------------------------------------#")
+
+    log_and_print_info("# " + os.path.basename(__file__) + " Exit Stats")
+    
+    log_and_print_info("# " + os.path.basename(__file__) + " Config section:\t " + config_section)
+
+    log_and_print_info("# " + os.path.basename(__file__) + " with HOURLY_TBL:\t " + HOURLY_TBL)
+
+    log_and_print_info("# " + os.path.basename(__file__) + " and DAILY_TBL:\t " +  DAILY_TBL)
+
+    log_and_print_info("#--------------------------------------#")
+
+    log_and_print_info("")
+
+    log_and_print_info("#--------------------------------------#")
+
+    log_and_print_info("# " + os.path.basename(__file__) + " successfully exited after processing " + config_in)
+
+    log_and_print_info("#--------------------------------------#")

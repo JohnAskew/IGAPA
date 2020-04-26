@@ -227,8 +227,6 @@ if subr_rc != 0:
 
 work_dir = os.path.join(dir_path, new_dir)
 
-logger.info("#--------------------------------------#")
-
 msg_info = "# " + os.path.basename(__file__) + " received ticket: " + str(in_ticket) + " creating new_dir " + new_dir
 
 logger.info(msg_info)
