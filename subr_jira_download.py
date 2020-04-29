@@ -353,6 +353,8 @@ def main() :
 
                 print("# INFO:", os.path.basename(__file__), " renaming", work_ticket, "to ", dest_dir)
 
+
+
             except:
 
                 logger.warning("#-------------------------------------#")
@@ -374,9 +376,11 @@ def main() :
                 print("#######################################")
 
 
-        os.mkdir(work_ticket)
+
 
         work_dir = os.path.join(save_dir, work_ticket)
+
+        os.mkdir(work_ticket)
 
         logger.info("# " + os.path.basename(__file__) + " saving work in: " + work_dir)
 

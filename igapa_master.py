@@ -365,6 +365,24 @@ else:
 
     print("#####################################")
 
+logging.info("# " + os.path.basename(__file__) + " Removing CSV files downloaded.")
+
+for table in range(len(DAILY_TBLZ)):
+
+    DAILY_TBLZ[table] = str(new_dir + '\\' + DAILY_TBLZ[table])
+
+    print("DAILY_TBLZ[table]", DAILY_TBLZ[table])
+
+    if os.path.exists( DAILY_TBLZ[table]):
+
+        os.remove(DAILY_TBLZ[table])
+
+    HOURLY_TBLZ[table] = str(new_dir + '\\' + HOURLY_TBLZ[table])
+
+    if os.path.exists( HOURLY_TBLZ[table]):
+
+        os.remove(HOURLY_TBLZ[table])
+
 logger.info("# " + os.path.basename(__file__) + " succeessful exit.")
 
 logger.info("#####################################")
