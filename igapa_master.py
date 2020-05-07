@@ -35,12 +35,42 @@ except:
 
     from datetime import datetime as dt
 
-now = dt.today().strftime('%Y%m%d_%H%M%S')
+try:
+
+    from tools_parse_config import ParseConfig
+
+except:
+    
+    msg = "Unable to find tools_parse_config.py"
+
+    logger.error("#######################################")
+
+    logger.error("# ERROR in " +  os.path.basename(__file__))
+    
+    logger.error("# " + msg)
+
+    logger.error("# " +  os.path.basename(__file__) + " aborting with no action taken.")
+
+    logger.error("#######################################")
+
+    print("#######################################")
+
+    print("# ERROR in", os.path.basename(__file__))
+    
+    print(msg)
+
+    print("#", os.path.basename(__file__), "aborting with no action taken.")
+
+    print("#######################################")
+
+    sys.exit(13)
 
 
 #######################################
 # VARIABLES
 #######################################
+
+now = dt.today().strftime('%Y%m%d_%H%M%S')
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -81,7 +111,14 @@ else:
     config_in = 'config_reports.ini'
 
 #######################################
-# Save off the old report - do no overlay
+# Start by extracting the LOGGING 
+#    reporting level for output 
+#    granularity (how much detail).
+#######################################
+
+
+#######################################
+# Save off the old report - do not overlay
 #######################################
 
 logging_filename = str(os.path.basename(__file__) + '.log')
@@ -206,6 +243,7 @@ print()
 msg_info = "# Executing call " + dir_path + '\\' + "subr_jira_download.py " + str(in_ticket)
 
 logger.info(msg_info)
+
 
 subr_rc = subprocess.call(["python", dir_path + "/" + "subr_jira_download.py", str(in_ticket)])
 
@@ -370,8 +408,6 @@ logging.info("# " + os.path.basename(__file__) + " Removing CSV files downloaded
 for table in range(len(DAILY_TBLZ)):
 
     DAILY_TBLZ[table] = str(new_dir + '\\' + DAILY_TBLZ[table])
-
-    print("DAILY_TBLZ[table]", DAILY_TBLZ[table])
 
     if os.path.exists( DAILY_TBLZ[table]):
 

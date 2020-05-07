@@ -7,13 +7,37 @@ import os, sys
 
 try:
 
+    from statistics import mean
+
+except:
+
+    os.system('pip install statistics')
+
+    from statistics import mean
+
+try:
+
+    import numpy as np
+
+    from numpy.polynomial import Polynomial
+
+except:
+
+    os.system('pip install numpy')
+
+    import numpy as np
+
+    from numpy.polynomial import Polynomial
+
+try:
+
     import bokeh
 
     from bokeh.plotting import figure, output_file, show
 
     from bokeh.layouts import column, gridplot
 
-    from bokeh.models import ColumnDataSource, Legend, LabelSet, Label, LegendItem, Div
+    from bokeh.models import ColumnDataSource, Legend, LabelSet, Label, LegendItem, Div, HoverTool
 
 except:
 
@@ -142,6 +166,16 @@ except:
 
     from datetime import datetime as dt
 
+try:
+
+    import time
+
+except:
+
+    os.system("pip install time")
+
+    import time
+
 now = dt.today().strftime('%Y-%m-%d-%H:%M:%S')
 
 logging_filename = "igapa_master.py.log"
@@ -151,16 +185,50 @@ logging.basicConfig(filename = logging_filename, level=logging.INFO, filemode = 
 #######################################
 # FUNCTTIONS BEFORE MAIN CODE
 #######################################
+
+#-------------------------------------#
+def best_fit(xs, ys):
+#-------------------------------------#
+    m = (  ( (mean(xs) * mean(ys)) - mean(xs * ys) )  /
+           ( (mean(xs) * mean(xs)) - mean(xs * xs))
+        )
+    b = mean(ys) - m * mean(xs)
+    return m, b
+
+#-------------------------------------#
+def date_to_seconds(timestamp):
+#-------------------------------------#
+
+    d = dt.strptime(str(timestamp), "%Y-%m-%d %H:%M:%S")
+
+    secs = time.mktime(d.timetuple())
+
+    #print("secs: " + str(secs))
+    
+    return int(secs)
+
 #-------------------------------------#
 def my_logger(orig_func):
 #-------------------------------------#
     import logging
-    logging.getLogger = (orig_func.__name__)
-    logging.basicConfig(filename = '{}.log'.format(orig_func.__name__), level = logging.INFO)
+
+    mylogr = logging.getLogger(orig_func.__name__)
+
+    mylogr.setLevel(logging.INFO)
+
+    mylogr_fh = logging.FileHandler('{}.log'.format(orig_func.__name__))
+
+    mylogr_fmt = ('%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+
+    formatter = logging.Formatter(mylogr_fmt)
+
+    mylogr_fh.setFormatter(formatter)
+
+    mylogr.addHandler(mylogr_fh)
 
     def wrapper(*args, **kwargs):
 
-        logging.info(
+        mylogr.info(
 
             'Function {} Ran with arg: {} and kwargs {}'.format(orig_func.__name__, args, kwargs))
 
@@ -267,7 +335,7 @@ if not os.path.exists(in_dir):
 
     log_and_print_error("# is NOT available for " + os.path.basename(__file__))
 
-    log_and_print_error("# --> was directory " + in_dir, "created?")
+    log_and_print_error("# --> was directory " + in_dir + " created?")
 
     log_and_print_error("# --> it is created but not a directory?")
 
@@ -629,7 +697,7 @@ for config_section in config_sections:
 
     df_daily_30_day_tbl_1 = df_daily_work_tbl_1.loc[mask].copy(deep = True)
 
-
+    
 
 
     ###############################################################################
@@ -911,10 +979,93 @@ for config_section in config_sections:
 
     df_daily_30_day_tbl_4 = df_daily_work_tbl_4.loc[mask].copy(deep = True)
 
+#######################################
+# DATA CLEAN UP  - Charts Row 1 Set NULLS To 0.
+#######################################
+
+    df_hourly_full_tbl_1[COLUMN_1].fillna(0, inplace = True)
+
+    df_hourly_full_tbl_1[COLUMN_2].fillna(0, inplace = True)
+
+    df_hourly_7_day_tbl_1[COLUMN_1].fillna(0, inplace = True)
+
+    df_hourly_7_day_tbl_1[COLUMN_2].fillna(0, inplace = True)
+
+    df_daily_full_tbl_1[COLUMN_1].fillna(0, inplace = True)
+
+    df_daily_full_tbl_1[COLUMN_2].fillna(0, inplace = True)
+
+    df_daily_30_day_tbl_1[COLUMN_1].fillna(0, inplace = True)
+
+    df_daily_30_day_tbl_1[COLUMN_2].fillna(0, inplace = True)
+
+#######################################
+# DATA CLEAN UP  - Charts Row 2 Set NULLS To 0.
+#######################################
+
+    df_hourly_full_tbl_2[COLUMN_3].fillna(0, inplace = True)
+
+    df_hourly_full_tbl_2[COLUMN_4].fillna(0, inplace = True)
+
+    df_hourly_7_day_tbl_2[COLUMN_3].fillna(0, inplace = True)
+
+    df_hourly_7_day_tbl_2[COLUMN_4].fillna(0, inplace = True)
+
+    df_daily_full_tbl_2[COLUMN_3].fillna(0, inplace = True)
+
+    df_daily_full_tbl_2[COLUMN_4].fillna(0, inplace = True)
+
+    df_daily_30_day_tbl_2[COLUMN_3].fillna(0, inplace = True)
+
+    df_daily_30_day_tbl_2[COLUMN_4].fillna(0, inplace = True)
+
+#######################################
+# DATA CLEAN UP  - Charts Row 3 Set NULLS To 0.
+#######################################
+
+    df_hourly_full_tbl_3[COLUMN_5].fillna(0, inplace = True)
+
+    df_hourly_full_tbl_3[COLUMN_6].fillna(0, inplace = True)
+
+    df_hourly_7_day_tbl_3[COLUMN_5].fillna(0, inplace = True)
+
+    df_hourly_7_day_tbl_3[COLUMN_6].fillna(0, inplace = True)
+
+    df_daily_full_tbl_3[COLUMN_5].fillna(0, inplace = True)
+
+    df_daily_full_tbl_3[COLUMN_6].fillna(0, inplace = True)
+
+    df_daily_30_day_tbl_3[COLUMN_5].fillna(0, inplace = True)
+
+    df_daily_30_day_tbl_3[COLUMN_6].fillna(0, inplace = True)
+
+#######################################
+# DATA CLEAN UP  - Charts Row 4 Set NULLS To 0.
+#######################################
+
+    df_hourly_full_tbl_4[COLUMN_7].fillna(0, inplace = True)
+
+    df_hourly_full_tbl_4[COLUMN_8].fillna(0, inplace = True)
+
+    df_hourly_7_day_tbl_4[COLUMN_7].fillna(0, inplace = True)
+
+    df_hourly_7_day_tbl_4[COLUMN_8].fillna(0, inplace = True)
+
+    df_daily_full_tbl_4[COLUMN_7].fillna(0, inplace = True)
+
+    df_daily_full_tbl_4[COLUMN_8].fillna(0, inplace = True)
+
+    df_daily_30_day_tbl_4[COLUMN_7].fillna(0, inplace = True)
+
+    df_daily_30_day_tbl_4[COLUMN_8].fillna(0, inplace = True)
+
+
+
     ###############################################################################
     # Convert Hourly full TBL1 COLUMN_1 / _2 to float
     ###############################################################################
 
+    
     df_hourly_full_tbl_1[COLUMN_1] = df_hourly_full_tbl_1[COLUMN_1].astype(float)
 
     df_hourly_full_tbl_1[COLUMN_2] = df_hourly_full_tbl_1[COLUMN_2].astype(float)
@@ -1077,14 +1228,53 @@ for config_section in config_sections:
 
     line1_tbl1_hourly_7_day.title.background_fill_color = "darkblue"
 
-    line1_tbl1_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_2 , color=("red"),  source=df_hourly_7_day_tbl_1, legend_label = ('HOURLY ' + COLUMN_2) )
+    line1_tbl1_hourly_7_day.diamond( x=COLUMN_DATE, y = COLUMN_2 , line_width = 3, alpha = 0.5, color=("red"),  source=df_hourly_7_day_tbl_1, legend_label = ('HOURLY ' + COLUMN_2) )
 
-    line1_tbl1_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_1 , color=("blue"), source=df_hourly_7_day_tbl_1, legend_label = ("HOURLY"  + COLUMN_1))
+    line1_tbl1_hourly_7_day.circle( x=COLUMN_DATE, y = COLUMN_1 , line_width = 2, alpha = 0.5, color=("blue"), source=df_hourly_7_day_tbl_1, legend_label = ("HOURLY"  + COLUMN_1))
 
     line1_tbl1_hourly_7_day.legend.location = legend_location #legend_location
 
     line1_tbl1_hourly_7_day.legend.label_text_font_size = legend_font_size
 
+#######################################
+# Calculate the BEST_FIT line against _MAX
+#######################################
+
+    int_list = []
+
+    for mydate in df_hourly_7_day_tbl_1[COLUMN_DATE]:
+
+        int_list.append(date_to_seconds(mydate))
+
+        int_list = sorted(int_list)
+
+    xs = np.array(int_list, dtype = float)
+
+    ys = np.array(df_hourly_7_day_tbl_1[COLUMN_2], dtype = float)
+
+    m, b = best_fit(xs, ys)
+
+    regression_line = [ (m * x) + b  for x in xs]
+
+    line1_tbl1_hourly_7_day.line(df_hourly_7_day_tbl_1[COLUMN_DATE], regression_line, color = 'yellow', alpha = 0.3, line_width = 6, legend_label = 'BEST_FIT of ' + COLUMN_2)
+
+#######################################
+# Calculate the OUTLIERS
+#######################################
+
+    threshold = 3
+
+    my_mean = np.mean(df_hourly_7_day_tbl_1[COLUMN_2])
+
+    my_std  = np.std(df_hourly_7_day_tbl_1[COLUMN_2])
+
+    for count, i in enumerate(df_hourly_7_day_tbl_1[COLUMN_2]):
+
+        if ( ( i - my_mean ) / my_std ) > threshold:
+
+            line1_tbl1_hourly_7_day.circle( x=df_hourly_7_day_tbl_1.iloc[count:count+1,0], y = df_hourly_7_day_tbl_1.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_2 + " Outlier")
+
+   
 
     #######################################
     # Visualized
@@ -1107,13 +1297,58 @@ for config_section in config_sections:
 
     line1_tbl1_daily.title.background_fill_color = "darkblue"##aaaaee"
 
-    line1_tbl1_daily.line( x=COLUMN_DATE, y =   COLUMN_2 , color=("red"),  source=df_daily_30_day_tbl_1, legend_label = ('DAILY ' + COLUMN_2))#, legend = "db_raw_SIZE_MAX")#, hatch_weight = 5, legend_label="Sunrise")
+    line1_tbl1_daily.line( x=COLUMN_DATE, y =   COLUMN_2 , alpha = 0.5, color=("red"),  source=df_daily_30_day_tbl_1, legend_label = ('DAILY ' + COLUMN_2))#, legend = "db_raw_SIZE_MAX")#, hatch_weight = 5, legend_label="Sunrise")
 
-    line1_tbl1_daily.line( x=COLUMN_DATE, y = COLUMN_1 , color=("blue"), source=df_daily_30_day_tbl_1, legend_label = ("DAILY " + COLUMN_1))#, legend = ["db_raw_SIZE_AVG","db_raw_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
+    line1_tbl1_daily.line( x=COLUMN_DATE, y = COLUMN_1 , alpha = 0.5, color=("blue"), source=df_daily_30_day_tbl_1, legend_label = ("DAILY " + COLUMN_1))#, legend = ["db_raw_SIZE_AVG","db_raw_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
 
     line1_tbl1_daily.legend.location = legend_location
 
     line1_tbl1_daily.legend.label_text_font_size = legend_font_size
+
+
+#######################################
+# Calculate the BEST_FIT line against _MAX
+# Left in for purposes of using at a later date
+# so do not delete out the this commented section
+# of code.
+#######################################
+
+    # int_list = []
+
+    # for mydate in df_daily_30_day_tbl_1[COLUMN_DATE]:
+
+    #     int_list.append(date_to_seconds(mydate))
+
+    #     int_list = sorted(int_list)
+
+    # xs = np.array(int_list, dtype = float)
+
+    # ys = np.array(df_daily_30_day_tbl_1[COLUMN_2], dtype = float)
+
+    # m, b = best_fit(xs, ys)
+
+    # regression_line = [ (m * x) + b  for x in xs]
+
+    # line1_tbl1_daily.line(df_daily_30_day_tbl_1[COLUMN_DATE], regression_line, color = 'yellow', alpha = 0.3, line_width = 6, legend_label = "BEST_FIT of " + COLUMN_2)
+
+#######################################
+# Calculate the OUTLIERS
+#######################################
+
+    # threshold = 3
+
+    # my_mean = np.mean(df_daily_30_day_tbl_1[COLUMN_2])
+
+    # my_std  = np.std(df_daily_30_day_tbl_1[COLUMN_2])
+
+    # for count, i in enumerate(df_daily_30_day_tbl_1[COLUMN_2]):
+
+    #     if ( ( i - my_mean ) / my_std ) > threshold:
+            
+    #         print("Outlier :" + str(i) + " count: " + str(count))
+    #         line1_tbl1_daily.circle( x=df_daily_30_day_tbl_1.iloc[count:count+1,0], y = df_daily_30_day_tbl_1.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"))
+
+
 
 
     #######################################
@@ -1191,13 +1426,53 @@ for config_section in config_sections:
 
     line2_tbl2_hourly_7_day.title.background_fill_color = "darkblue"##aaaaee"
 
-    line2_tbl2_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_4 , color=("red"),  source=df_hourly_7_day_tbl_2, legend_label = ('HOURLY ' + COLUMN_4))
+    line2_tbl2_hourly_7_day.diamond( x=COLUMN_DATE, y = COLUMN_4 , line_width = 3, alpha = 0.5, color=("red"),  source=df_hourly_7_day_tbl_2, legend_label = ('HOURLY ' + COLUMN_4) )
 
-    line2_tbl2_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_3 , color=("blue"), source=df_hourly_7_day_tbl_2, legend_label = ("HOURLY"  + COLUMN_3))
-
+    line2_tbl2_hourly_7_day.circle( x=COLUMN_DATE, y = COLUMN_3 , line_width = 2, alpha = 0.5, color=("blue"), source=df_hourly_7_day_tbl_2, legend_label = ("HOURLY"  + COLUMN_3))
+    
     line2_tbl2_hourly_7_day.legend.location = legend_location
 
     line2_tbl2_hourly_7_day.legend.label_text_font_size = legend_font_size
+
+#######################################
+# Calculate the BEST_FIT line against _MAX
+#######################################
+
+    int_list = []
+
+    for mydate in df_hourly_7_day_tbl_2[COLUMN_DATE]:
+
+        int_list.append(date_to_seconds(mydate))
+
+        int_list = sorted(int_list)
+
+    xs = np.array(int_list, dtype = float)
+
+    ys = np.array(df_hourly_7_day_tbl_2[COLUMN_4], dtype = float)
+
+    m, b = best_fit(xs, ys)
+
+    regression_line = [ (m * x) + b  for x in xs]
+
+    line2_tbl2_hourly_7_day.line(df_hourly_7_day_tbl_2[COLUMN_DATE], regression_line, color = 'yellow', alpha = 0.3, line_width = 6, legend_label = 'BEST_FIT of ' + COLUMN_4)
+
+#######################################
+# Calculate the OUTLIERS
+#######################################
+
+    threshold = 3
+
+    my_mean = np.mean(df_hourly_7_day_tbl_2[COLUMN_4])
+
+    my_std  = np.std(df_hourly_7_day_tbl_2[COLUMN_4])
+
+    for count, i in enumerate(df_hourly_7_day_tbl_2[COLUMN_4]):
+
+        if ( ( i - my_mean ) / my_std ) > threshold:
+
+            line2_tbl2_hourly_7_day.circle( x=df_hourly_7_day_tbl_2.iloc[count:count+1,0], y = df_hourly_7_day_tbl_2.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_4 + " Outlier")
+
+   
 
 
     #######################################
@@ -1221,9 +1496,9 @@ for config_section in config_sections:
 
     line2_tbl2_daily.title.background_fill_color = "darkblue"##aaaaee"
 
-    line2_tbl2_daily.line( x=COLUMN_DATE, y =   COLUMN_4 , color=("red"),  source=df_daily_30_day_tbl_2, legend_label = ('DAILY ' + COLUMN_4))#, legend = "db_tbl_2_SIZE_MAX")#, hatch_weight = 5, legend_label="Sunrise")
+    line2_tbl2_daily.line( x=COLUMN_DATE, y =   COLUMN_4 , alpha = 0.5, color=("red"),  source=df_daily_30_day_tbl_2, legend_label = ('DAILY ' + COLUMN_4))#, legend = "db_tbl_2_SIZE_MAX")#, hatch_weight = 5, legend_label="Sunrise")
 
-    line2_tbl2_daily.line( x=COLUMN_DATE, y = COLUMN_3 , color=("blue"), source=df_daily_30_day_tbl_2, legend_label = ("DAILY " + COLUMN_3))#, legend = ["db_tbl_2_SIZE_AVG","db_tbl_2_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
+    line2_tbl2_daily.line( x=COLUMN_DATE, y = COLUMN_3 , alpha = 0.5, color=("blue"), source=df_daily_30_day_tbl_2, legend_label = ("DAILY " + COLUMN_3))#, legend = ["db_tbl_2_SIZE_AVG","db_tbl_2_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
 
     line2_tbl2_daily.legend.location = legend_location
 
@@ -1308,13 +1583,53 @@ for config_section in config_sections:
 
     line3_tbl3_hourly_7_day.title.background_fill_color = "darkblue"##aaaaee"
 
-    line3_tbl3_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_6 , color=("red"),  source=df_hourly_7_day_tbl_3, legend_label = ('HOURLY ' + COLUMN_6))
+    line3_tbl3_hourly_7_day.diamond( x=COLUMN_DATE, y = COLUMN_6 , line_width = 3, alpha = 0.5, color=("red"),  source=df_hourly_7_day_tbl_3, legend_label = ('HOURLY ' + COLUMN_6) )
 
-    line3_tbl3_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_5 , color=("blue"), source=df_hourly_7_day_tbl_3, legend_label = ("HOURLY"  + COLUMN_5))
-
+    line3_tbl3_hourly_7_day.circle( x=COLUMN_DATE, y = COLUMN_5 , line_width = 2, alpha = 0.5, color=("blue"), source=df_hourly_7_day_tbl_3, legend_label = ("HOURLY"  + COLUMN_5))
+    
     line3_tbl3_hourly_7_day.legend.location = legend_location
 
     line3_tbl3_hourly_7_day.legend.label_text_font_size = legend_font_size
+
+#######################################
+# Calculate the BEST_FIT line against _MAX
+#######################################
+
+    int_list = []
+
+    for mydate in df_hourly_7_day_tbl_3[COLUMN_DATE]:
+
+        int_list.append(date_to_seconds(mydate))
+
+        int_list = sorted(int_list)
+
+    xs = np.array(int_list, dtype = float)
+
+    ys = np.array(df_hourly_7_day_tbl_3[COLUMN_6], dtype = float)
+
+    m, b = best_fit(xs, ys)
+
+    regression_line = [ (m * x) + b  for x in xs]
+
+    line3_tbl3_hourly_7_day.line(df_hourly_7_day_tbl_3[COLUMN_DATE], regression_line, color = 'yellow', alpha = 0.3, line_width = 6, legend_label = 'BEST_FIT of ' + COLUMN_6)
+
+#######################################
+# Calculate the OUTLIERS
+#######################################
+
+    threshold = 3
+
+    my_mean = np.mean(df_hourly_7_day_tbl_3[COLUMN_6])
+
+    my_std  = np.std(df_hourly_7_day_tbl_3[COLUMN_6])
+
+    for count, i in enumerate(df_hourly_7_day_tbl_3[COLUMN_6]):
+
+        if ( ( i - my_mean ) / my_std ) > threshold:
+
+            line3_tbl3_hourly_7_day.circle( x=df_hourly_7_day_tbl_3.iloc[count:count+1,0], y = df_hourly_7_day_tbl_3.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_6 + " Outlier")
+
+   
 
 
     #######################################
@@ -1338,9 +1653,9 @@ for config_section in config_sections:
 
     line3_tbl3_daily.title.background_fill_color = "darkblue"##aaaaee"
 
-    line3_tbl3_daily.line( x=COLUMN_DATE, y =   COLUMN_6 , color=("red"),  source=df_daily_30_day_tbl_3, legend_label = ('DAILY ' + COLUMN_6))#, legend = "db_raw_SIZE_MAX")#, hatch_weight = 5, legend_label="Sunrise")
+    line3_tbl3_daily.line( x=COLUMN_DATE, y =   COLUMN_6 , alpha = 0.5, color=("red"),  source=df_daily_30_day_tbl_3, legend_label = ('DAILY ' + COLUMN_6))#, legend = "db_raw_SIZE_MAX")#, hatch_weight = 5, legend_label="Sunrise")
 
-    line3_tbl3_daily.line( x=COLUMN_DATE, y = COLUMN_5 , color=("blue"), source=df_daily_30_day_tbl_3, legend_label = ("DAILY " + COLUMN_5))#, legend = ["db_raw_SIZE_AVG","db_raw_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
+    line3_tbl3_daily.line( x=COLUMN_DATE, y = COLUMN_5 , alpha = 0.5, color=("blue"), source=df_daily_30_day_tbl_3, legend_label = ("DAILY " + COLUMN_5))#, legend = ["db_raw_SIZE_AVG","db_raw_SIZE_MAX"])#, hatch_weight = 5, legend_label="Sunrise")
 
     line3_tbl3_daily.legend.location = legend_location
 
@@ -1425,13 +1740,53 @@ for config_section in config_sections:
 
     line4_tbl4_hourly_7_day.title.background_fill_color = "darkblue"##aaaaee"
 
-    line4_tbl4_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_8 , color=("red"),  source=df_hourly_7_day_tbl_4, legend_label = ('HOURLY ' + COLUMN_8))
+    line4_tbl4_hourly_7_day.diamond( x=COLUMN_DATE, y = COLUMN_8 , line_width = 3, alpha = 0.5, color=("red"),  source=df_hourly_7_day_tbl_4, legend_label = ('HOURLY ' + COLUMN_8) )
 
-    line4_tbl4_hourly_7_day.line( x=COLUMN_DATE, y = COLUMN_7 , color=("blue"), source=df_hourly_7_day_tbl_4, legend_label = ("HOURLY"  + COLUMN_7))
+    line4_tbl4_hourly_7_day.circle( x=COLUMN_DATE, y = COLUMN_7 , line_width = 2, alpha = 0.5, color=("blue"), source=df_hourly_7_day_tbl_4, legend_label = ("HOURLY"  + COLUMN_7))
 
     line4_tbl4_hourly_7_day.legend.location = legend_location
 
     line4_tbl4_hourly_7_day.legend.label_text_font_size = legend_font_size
+
+#######################################
+# Calculate the BEST_FIT line against _MAX
+#######################################
+
+    int_list = []
+
+    for mydate in df_hourly_7_day_tbl_4[COLUMN_DATE]:
+
+        int_list.append(date_to_seconds(mydate))
+
+        int_list = sorted(int_list)
+
+    xs = np.array(int_list, dtype = float)
+
+    ys = np.array(df_hourly_7_day_tbl_4[COLUMN_8], dtype = float)
+
+    m, b = best_fit(xs, ys)
+
+    regression_line = [ (m * x) + b  for x in xs]
+
+    line4_tbl4_hourly_7_day.line(df_hourly_7_day_tbl_4[COLUMN_DATE], regression_line, color = 'yellow', alpha = 0.3, line_width = 6, legend_label = 'BEST_FIT of ' + COLUMN_8)
+
+#######################################
+# Calculate the OUTLIERS
+#######################################
+
+    threshold = 3
+
+    my_mean = np.mean(df_hourly_7_day_tbl_4[COLUMN_8])
+
+    my_std  = np.std(df_hourly_7_day_tbl_4[COLUMN_8])
+
+    for count, i in enumerate(df_hourly_7_day_tbl_4[COLUMN_8]):
+
+        if ( ( i - my_mean ) / my_std ) > threshold:
+
+            line4_tbl4_hourly_7_day.circle( x=df_hourly_7_day_tbl_4.iloc[count:count+1,0], y = df_hourly_7_day_tbl_4.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_8 + " Outlier")
+
+   
 
 
     #######################################
@@ -1544,6 +1899,7 @@ for config_section in config_sections:
 
     p_ctbl4 = column(Div(text = "<H3 style=\"text-align:center;\">" + COLUMN_7 + "\t&\t" + COLUMN_8 + "</H3>"), p_tbl4)
 
+
     MEM_OBJECT_GRIDPLOT = gridplot([[p_ctbl1, 
         line1_tbl1_daily, 
         line1_tbl1_hourly_7_day], 
@@ -1556,6 +1912,30 @@ for config_section in config_sections:
         [p_ctbl4,
         line4_tbl4_daily,
         line4_tbl4_hourly_7_day]], toolbar_location='right')
+
+    line1_tbl1_daily.add_tools(HoverTool(tooltips = [(COLUMN_DATE, "$x{%F}")],
+                                        formatters = {"$x" :'datetime'}))
+
+    line1_tbl1_hourly_7_day.add_tools(HoverTool(tooltips = [(COLUMN_DATE, "$x{%Y-%m-%d  hour:%H}")],
+                                        formatters = {"$x" :'datetime'}))
+ 
+    line2_tbl2_daily.add_tools(HoverTool(tooltips = [(COLUMN_DATE, "$x{%F}")],
+                                        formatters = {"$x" :'datetime'}))
+
+    line2_tbl2_hourly_7_day.add_tools(HoverTool(tooltips = [(COLUMN_DATE, "$x{%Y-%m-%d  hour:%H}")],
+                                        formatters = {"$x" :'datetime'}))
+
+    line3_tbl3_daily.add_tools(HoverTool(tooltips = [(COLUMN_DATE, "$x{%F}")],
+                                        formatters = {"$x" :'datetime'}))
+
+    line3_tbl3_hourly_7_day.add_tools(HoverTool(tooltips = [(COLUMN_DATE, "$x{%Y-%m-%d  hour:%H}")],
+                                        formatters = {"$x" :'datetime'}))
+
+    line4_tbl4_daily.add_tools(HoverTool(tooltips = [(COLUMN_DATE, "$x{%F}")],
+                                        formatters = {"$x" :'datetime'}))
+
+    line4_tbl4_hourly_7_day.add_tools(HoverTool(tooltips = [(COLUMN_DATE, "$x{%Y-%m-%d  hour:%H}")],
+                                        formatters = {"$x" :'datetime'}))
 
     show(column(Div(text = "<H1 style=\"text-align:center;border:1px solid red;color:yellow;background-color: darkblue;\">" + DAILY_TBL + " & " + HOURLY_TBL + "</H1>"), MEM_OBJECT_GRIDPLOT))
 
