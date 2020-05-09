@@ -181,6 +181,10 @@ now = dt.today().strftime('%Y-%m-%d-%H:%M:%S')
 logging_filename = "igapa_master.py.log"
 
 logging.basicConfig(filename = logging_filename, level=logging.INFO, filemode = 'a', format='%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
+
+log_level = "INFO"
+
+outlier_threshold = float(3.0)
   
 #######################################
 # FUNCTTIONS BEFORE MAIN CODE
@@ -246,7 +250,6 @@ def log_and_print_debug(msg):
 
 
 #-------------------------------------#
-#@my_logger
 def log_and_print_info(msg):
 #-------------------------------------#
 
@@ -431,8 +434,45 @@ largeplotWidth  = int(largeplotWidth)
 
 largeplotHeight = int(largeplotHeight)
 
+try:
 
-#######################################
+    log_level, outlier_threshold = b.read_config_admin_reporting(save_dir, 'config_admin.ini')
+
+    log_and_print_info("# " + os.path.basename(__file__) + " REPORTING variables log_level " + log_level + " outlier_threshold " + outlier_threshold)
+
+
+except:
+
+    log_and_print_warning("WARNING: " + os.path.basename(__file__))
+
+    log_and_print_warning("# " + os.path.basename(__file__) + " unable to reference REPORTING section of config_admin.ini")
+
+    log_and_print_warning("# Using defaults:")
+
+    log_and_print_warning("# ==> log_level " + log_level)
+
+    log_and_print_warning("# ==> outlier_threshold " + outlier_threshold)
+
+try:
+
+    if len(outlier_threshold) > 0:
+
+        outlier_threshold = float(outlier_threshold)
+
+except:
+     
+
+    log_and_print_warning("WARNING: " + os.path.basename(__file__))
+
+    log_and_print_warning("# " + os.path.basename(__file__) + " unable to process config_admin.ini REPORTING variable outlier_threshold")
+
+    log_and_print_warning("# Using defaults:")
+
+    log_and_print_warning("# ==> log_level " + log_level)
+
+    log_and_print_warning("# ==> outlier_threshold " + outlier_threshold)
+
+    #######################################
 # LOOP for duration of the program
 #
 # #      # # #   # # #   #  #
@@ -1262,15 +1302,13 @@ for config_section in config_sections:
 # Calculate the OUTLIERS
 #######################################
 
-    threshold = 3
-
     my_mean = np.mean(df_hourly_7_day_tbl_1[COLUMN_2])
 
     my_std  = np.std(df_hourly_7_day_tbl_1[COLUMN_2])
 
     for count, i in enumerate(df_hourly_7_day_tbl_1[COLUMN_2]):
 
-        if ( ( i - my_mean ) / my_std ) > threshold:
+        if ( ( i - my_mean ) / my_std ) > outlier_threshold:
 
             line1_tbl1_hourly_7_day.circle( x=df_hourly_7_day_tbl_1.iloc[count:count+1,0], y = df_hourly_7_day_tbl_1.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_2 + " Outlier")
 
@@ -1313,29 +1351,28 @@ for config_section in config_sections:
 # of code.
 #######################################
 
-    # int_list = []
+    int_list = []
 
-    # for mydate in df_daily_30_day_tbl_1[COLUMN_DATE]:
+    for mydate in df_daily_30_day_tbl_1[COLUMN_DATE]:
 
-    #     int_list.append(date_to_seconds(mydate))
+        int_list.append(date_to_seconds(mydate))
 
-    #     int_list = sorted(int_list)
+        int_list = sorted(int_list)
 
-    # xs = np.array(int_list, dtype = float)
+    xs = np.array(int_list, dtype = float)
 
-    # ys = np.array(df_daily_30_day_tbl_1[COLUMN_2], dtype = float)
+    ys = np.array(df_daily_30_day_tbl_1[COLUMN_2], dtype = float)
 
-    # m, b = best_fit(xs, ys)
+    m, b = best_fit(xs, ys)
 
-    # regression_line = [ (m * x) + b  for x in xs]
+    regression_line = [ (m * x) + b  for x in xs]
 
-    # line1_tbl1_daily.line(df_daily_30_day_tbl_1[COLUMN_DATE], regression_line, color = 'yellow', alpha = 0.3, line_width = 6, legend_label = "BEST_FIT of " + COLUMN_2)
+    line1_tbl1_daily.line(df_daily_30_day_tbl_1[COLUMN_DATE], regression_line, color = 'yellow', alpha = 0.3, line_width = 6, legend_label = "BEST_FIT of " + COLUMN_2)
 
 #######################################
 # Calculate the OUTLIERS
 #######################################
 
-    # threshold = 3
 
     # my_mean = np.mean(df_daily_30_day_tbl_1[COLUMN_2])
 
@@ -1343,10 +1380,9 @@ for config_section in config_sections:
 
     # for count, i in enumerate(df_daily_30_day_tbl_1[COLUMN_2]):
 
-    #     if ( ( i - my_mean ) / my_std ) > threshold:
+    #     if ( ( i - my_mean ) / my_std ) > outlier_threshold:
             
-    #         print("Outlier :" + str(i) + " count: " + str(count))
-    #         line1_tbl1_daily.circle( x=df_daily_30_day_tbl_1.iloc[count:count+1,0], y = df_daily_30_day_tbl_1.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"))
+    #         line1_tbl1_daily.circle( x=df_daily_30_day_tbl_1.iloc[count:count+1,0], y = df_daily_30_day_tbl_1.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_2 + " Outlier")
 
 
 
@@ -1460,7 +1496,6 @@ for config_section in config_sections:
 # Calculate the OUTLIERS
 #######################################
 
-    threshold = 3
 
     my_mean = np.mean(df_hourly_7_day_tbl_2[COLUMN_4])
 
@@ -1468,7 +1503,7 @@ for config_section in config_sections:
 
     for count, i in enumerate(df_hourly_7_day_tbl_2[COLUMN_4]):
 
-        if ( ( i - my_mean ) / my_std ) > threshold:
+        if ( ( i - my_mean ) / my_std ) > outlier_threshold:
 
             line2_tbl2_hourly_7_day.circle( x=df_hourly_7_day_tbl_2.iloc[count:count+1,0], y = df_hourly_7_day_tbl_2.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_4 + " Outlier")
 
@@ -1503,6 +1538,47 @@ for config_section in config_sections:
     line2_tbl2_daily.legend.location = legend_location
 
     line2_tbl2_daily.legend.label_text_font_size = legend_font_size
+
+    #######################################
+# Calculate the BEST_FIT line against _MAX
+# Left in for purposes of using at a later date
+# so do not delete out the this commented section
+# of code.
+#######################################
+
+    int_list = []
+
+    for mydate in df_daily_30_day_tbl_2[COLUMN_DATE]:
+
+        int_list.append(date_to_seconds(mydate))
+
+        int_list = sorted(int_list)
+
+    xs = np.array(int_list, dtype = float)
+
+    ys = np.array(df_daily_30_day_tbl_2[COLUMN_4], dtype = float)
+
+    m, b = best_fit(xs, ys)
+
+    regression_line = [ (m * x) + b  for x in xs]
+
+    line2_tbl2_daily.line(df_daily_30_day_tbl_2[COLUMN_DATE], regression_line, color = 'yellow', alpha = 0.3, line_width = 6, legend_label = "BEST_FIT of " + COLUMN_4)
+
+#######################################
+# Calculate the OUTLIERS
+#######################################
+
+    # my_mean = np.mean(df_daily_30_day_tbl_2[COLUMN_4])
+
+    # my_std  = np.std(df_daily_30_day_tbl_2[COLUMN_4])
+
+    # for count, i in enumerate(df_daily_30_day_tbl_2[COLUMN_4]):
+
+    #     if ( ( i - my_mean ) / my_std ) > outlier_threshold:
+            
+    #         line2_tbl2_daily.circle( x=df_daily_30_day_tbl_2.iloc[count:count+1,0], y = df_daily_30_day_tbl_2.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_4 + " Outlier")
+
+
 
 
     #######################################
@@ -1617,15 +1693,13 @@ for config_section in config_sections:
 # Calculate the OUTLIERS
 #######################################
 
-    threshold = 3
-
     my_mean = np.mean(df_hourly_7_day_tbl_3[COLUMN_6])
 
     my_std  = np.std(df_hourly_7_day_tbl_3[COLUMN_6])
 
     for count, i in enumerate(df_hourly_7_day_tbl_3[COLUMN_6]):
 
-        if ( ( i - my_mean ) / my_std ) > threshold:
+        if ( ( i - my_mean ) / my_std ) > outlier_threshold:
 
             line3_tbl3_hourly_7_day.circle( x=df_hourly_7_day_tbl_3.iloc[count:count+1,0], y = df_hourly_7_day_tbl_3.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_6 + " Outlier")
 
@@ -1660,6 +1734,48 @@ for config_section in config_sections:
     line3_tbl3_daily.legend.location = legend_location
 
     line3_tbl3_daily.legend.label_text_font_size = legend_font_size
+
+    #######################################
+# Calculate the BEST_FIT line against _MAX
+# Left in for purposes of using at a later date
+# so do not delete out the this commented section
+# of code.
+#######################################
+
+    int_list = []
+
+    for mydate in df_daily_30_day_tbl_3[COLUMN_DATE]:
+
+        int_list.append(date_to_seconds(mydate))
+
+        int_list = sorted(int_list)
+
+    xs = np.array(int_list, dtype = float)
+
+    ys = np.array(df_daily_30_day_tbl_3[COLUMN_6], dtype = float)
+
+    m, b = best_fit(xs, ys)
+
+    regression_line = [ (m * x) + b  for x in xs]
+
+    line3_tbl3_daily.line(df_daily_30_day_tbl_3[COLUMN_DATE], regression_line, color = 'yellow', alpha = 0.3, line_width = 6, legend_label = "BEST_FIT of " + COLUMN_6)
+
+#######################################
+# Calculate the OUTLIERS
+#######################################
+
+    # 
+
+    # my_mean = np.mean(df_daily_30_day_tbl_3[COLUMN_6])
+
+    # my_std  = np.std(df_daily_30_day_tbl_3[COLUMN_6])
+
+    # for count, i in enumerate(df_daily_30_day_tbl_3[COLUMN_6]):
+
+    #     if ( ( i - my_mean ) / my_std ) > outlier_threshold:
+            
+    #         line3_tbl3_daily.circle( x=df_daily_30_day_tbl_3.iloc[count:count+1,0], y = df_daily_30_day_tbl_3.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_6 + " Outlier")
+
 
 
     #######################################
@@ -1774,15 +1890,14 @@ for config_section in config_sections:
 # Calculate the OUTLIERS
 #######################################
 
-    threshold = 3
-
+    
     my_mean = np.mean(df_hourly_7_day_tbl_4[COLUMN_8])
 
     my_std  = np.std(df_hourly_7_day_tbl_4[COLUMN_8])
 
     for count, i in enumerate(df_hourly_7_day_tbl_4[COLUMN_8]):
 
-        if ( ( i - my_mean ) / my_std ) > threshold:
+        if ( ( i - my_mean ) / my_std ) > outlier_threshold:
 
             line4_tbl4_hourly_7_day.circle( x=df_hourly_7_day_tbl_4.iloc[count:count+1,0], y = df_hourly_7_day_tbl_4.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_8 + " Outlier")
 
@@ -1817,6 +1932,48 @@ for config_section in config_sections:
     line4_tbl4_daily.legend.location = legend_location
 
     line4_tbl4_daily.legend.label_text_font_size = legend_font_size
+
+#######################################
+# Calculate the BEST_FIT line against _MAX
+# Left in for purposes of using at a later date
+# so do not delete out the this commented section
+# of code.
+#######################################
+
+    int_list = []
+
+    for mydate in df_daily_30_day_tbl_4[COLUMN_DATE]:
+
+        int_list.append(date_to_seconds(mydate))
+
+        int_list = sorted(int_list)
+
+    xs = np.array(int_list, dtype = float)
+
+    ys = np.array(df_daily_30_day_tbl_4[COLUMN_8], dtype = float)
+
+    m, b = best_fit(xs, ys)
+
+    regression_line = [ (m * x) + b  for x in xs]
+
+    line4_tbl4_daily.line(df_daily_30_day_tbl_4[COLUMN_DATE], regression_line, color = 'yellow', alpha = 0.3, line_width = 6, legend_label = "BEST_FIT of " + COLUMN_8)
+
+#######################################
+# Calculate the OUTLIERS
+#######################################
+
+
+    # my_mean = np.mean(df_daily_30_day_tbl_4[COLUMN_8])
+
+    # my_std  = np.std(df_daily_30_day_tbl_4[COLUMN_8])
+
+    # for count, i in enumerate(df_daily_30_day_tbl_4[COLUMN_8]):
+
+    #     if ( ( i - my_mean ) / my_std ) > outlier_threshold:
+            
+    #         line4_tbl4_daily.circle( x=df_daily_30_day_tbl_4.iloc[count:count+1,0], y = df_daily_30_day_tbl_4.iloc[count:count+1,2] , line_width = 7, alpha = 0.5, color=("green"), legend_label = COLUMN_8 + " Outlier")
+
+
 
 
     #######################################
