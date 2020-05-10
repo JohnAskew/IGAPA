@@ -360,11 +360,15 @@ class ParseConfig:
         
         try:
 
-            log_level   = config.get('REPORTING', 'log_level')
+            log_level          = config.get('REPORTING', 'log_level')
 
-            outlier_threshold = config.get('REPORTING', 'outlier_threshold')
+            outlier_threshold  = config.get('REPORTING', 'outlier_threshold')
 
-            return log_level, outlier_threshold
+            reports_hourly = config.get('REPORTING', 'reports_hourly')
+
+            reports_daily  = config.get('REPORTING', 'reports_daily')
+
+            return log_level, outlier_threshold, reports_hourly, reports_daily
 
                
         except Exception as e:
@@ -598,9 +602,12 @@ if __name__ == '__main__':
 
     print("# INFO: config_admin.ini has section MASTER-LAYOUT with", legend_font_size, legend_location, plotWidth, plotHeight, smallplotWidth, smallplotHeight, largeplotWidth, largeplotHeight)
 
-    log_level, outlier_threshold = a.read_config_admin_reporting('.', 'config_admin.ini')
+    log_level, outlier_threshold, reports_hourly, reports_daily = a.read_config_admin_reporting('.', 'config_admin.ini')
 
-    print("# INFO: config_admin.ini has section REPORTING with " + str(log_level) + " AND outlier_threshold of " + outlier_threshold)
+    print("# INFO: config_admin.ini has section REPORTING with " + str(log_level) + 
+                                    " AND outlier_threshold of " + outlier_threshold +
+                                    " reports_hourly "       + reports_hourly + 
+                                    " reports_daily  "       + reports_daily)
 
 
     a.read_config_sections('.')
