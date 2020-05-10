@@ -80,6 +80,13 @@ global in_ticket
 
 in_ticket = ""
 
+class_chart = 'DB_SIZE'
+
+log_level = "WARNING"
+
+######################################
+# START LOGIC for MAIN
+######################################
 if __name__ == "__main__":
 
     if len(sys.argv) > 1:
@@ -109,6 +116,58 @@ else:
     new_dir = str("EXA-" + str(in_ticket))
 
     config_in = 'config_reports.ini'
+
+#######################################
+#######################################
+# BEGIN MAIN LOGIC
+#######################################
+#######################################
+
+#-------------------------------------#
+# Extract log_level for reporting details
+# ------------------------------------#
+try:
+
+    b = ParseConfig(class_chart, 'config_admin.ini')
+
+except Exception as e:
+
+    print("#######################################")
+
+    print("# WARNING" + os.path.basename(__file__) )
+
+    print("#-------------------------------------#")
+
+    print("# Unable to read config_admin.ini section REPORTING to get log_level")
+
+    print("# Using defaults:")
+
+    print("# ===> " + os.path.basename(__file__) + " using log_level of WARNING")
+
+    print(e)
+
+try:
+
+    log_level, outlier_threshold, reports_hourly, reports_daily = b.read_config_admin_reporting('.', 'config_admin.ini')
+
+    print("# " + os.path.basename(__file__) + " REPORTING variables log_level " + log_level )
+
+
+except Exception as e:
+
+    print("#------------------------------------#")
+
+    print("WARNING: " + os.path.basename(__file__))
+    print("#------------------------------------#")
+
+    print("# " + os.path.basename(__file__) + " unable to reference REPORTING section of config_admin.ini")
+
+    print("# Using defaults:")
+
+    print("# ==> log_level " + log_level)
+
+    print(e)
+
 
 #######################################
 # Start by extracting the LOGGING 
@@ -148,15 +207,22 @@ if os.path.exists(logging_filename):
 # Log the beginning of processsing
 #######################################
 
+
+
 logger = logging.getLogger()
 
-logger.setLevel(logging.DEBUG)
+if log_level in ("DEBUG", "INFO"):
+
+    logger.setLevel(logging.INFO)
+else:
+
+    logger.setLevel(logging.WARNING)
 
 formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(lineno)d - %(message)s')
 
 fh = logging.FileHandler(logging_filename, mode = 'a')
 
-fh.setLevel(logging.DEBUG)
+fh.setLevel(logging.INFO)
 
 fh.setFormatter(formatter)
 
@@ -164,7 +230,7 @@ logger.addHandler(fh)
 
 ch = logging.StreamHandler()
 
-ch.setLevel(logging.DEBUG)
+ch.setLevel(logging.INFO)
 
 ch.setFormatter(formatter)
 
@@ -405,19 +471,19 @@ else:
 
 logging.info("# " + os.path.basename(__file__) + " Removing CSV files downloaded.")
 
-for table in range(len(DAILY_TBLZ)):
+# for table in range(len(DAILY_TBLZ)):
 
-    DAILY_TBLZ[table] = str(new_dir + '\\' + DAILY_TBLZ[table])
+#     DAILY_TBLZ[table] = str(new_dir + '\\' + DAILY_TBLZ[table])
 
-    if os.path.exists( DAILY_TBLZ[table]):
+#     if os.path.exists( DAILY_TBLZ[table]):
 
-        os.remove(DAILY_TBLZ[table])
+#         os.remove(DAILY_TBLZ[table])
 
-    HOURLY_TBLZ[table] = str(new_dir + '\\' + HOURLY_TBLZ[table])
+#     HOURLY_TBLZ[table] = str(new_dir + '\\' + HOURLY_TBLZ[table])
 
-    if os.path.exists( HOURLY_TBLZ[table]):
+#     if os.path.exists( HOURLY_TBLZ[table]):
 
-        os.remove(HOURLY_TBLZ[table])
+#         os.remove(HOURLY_TBLZ[table])
 
 logger.info("# " + os.path.basename(__file__) + " succeessful exit.")
 
