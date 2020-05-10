@@ -37,7 +37,7 @@ try:
 
     from bokeh.layouts import column, gridplot
 
-    from bokeh.models import ColumnDataSource, Legend, LabelSet, Label, LegendItem, Div, HoverTool
+    from bokeh.models import ColumnDataSource, Legend, LabelSet, Label, LegendItem, Div, HoverTool, NumeralTickFormatter
 
 except:
 
@@ -176,7 +176,7 @@ except:
 
     import time
 
-now = dt.today().strftime('%Y-%m-%d-%H:%M:%S')
+now = dt.today().strftime('%Y%m%d_%H%M%S')
 
 logging_filename = "igapa_master.py.log"
 
@@ -1379,7 +1379,7 @@ for config_section in config_sections:
     ###############################################################################   
 
 
-    output_title = str(config_section + '.html')
+    output_title = str(config_section + '_' + str(now) +  '.html')
 
     output_file(output_title, title = config_section)
 
@@ -1416,6 +1416,8 @@ for config_section in config_sections:
     line1_tbl1_hourly_7_day.legend.location = legend_location #legend_location
 
     line1_tbl1_hourly_7_day.legend.label_text_font_size = legend_font_size
+
+    line1_tbl1_hourly_7_day.yaxis[0].formatter = NumeralTickFormatter(format="1,000") #xxxxx
 
 #######################################
 # Calculate the BEST_FIT line against _MAX
@@ -1522,6 +1524,8 @@ for config_section in config_sections:
     line1_tbl1_daily.legend.location = legend_location
 
     line1_tbl1_daily.legend.label_text_font_size = legend_font_size
+
+    line1_tbl1_daily.yaxis[0].formatter = NumeralTickFormatter(format="1,000") #xxxxx
 
 
 #######################################
@@ -1685,6 +1689,8 @@ for config_section in config_sections:
 
     line2_tbl2_hourly_7_day.legend.label_text_font_size = legend_font_size
 
+    line2_tbl2_hourly_7_day.yaxis[0].formatter = NumeralTickFormatter(format="1,000") #xxxxx
+
 #######################################
 # Calculate the BEST_FIT line against _MAX
 #######################################
@@ -1753,6 +1759,8 @@ for config_section in config_sections:
     line2_tbl2_daily.legend.location = legend_location
 
     line2_tbl2_daily.legend.label_text_font_size = legend_font_size
+
+    line2_tbl2_daily.yaxis[0].formatter = NumeralTickFormatter(format="1,000") #xxxxx
 
     #######################################
 # Calculate the BEST_FIT line against _MAX
@@ -1882,6 +1890,8 @@ for config_section in config_sections:
 
     line3_tbl3_hourly_7_day.legend.label_text_font_size = legend_font_size
 
+    line3_tbl3_hourly_7_day.yaxis[0].formatter = NumeralTickFormatter(format="1,000") #xxxxx
+
 #######################################
 # Calculate the BEST_FIT line against _MAX
 #######################################
@@ -1949,6 +1959,8 @@ for config_section in config_sections:
     line3_tbl3_daily.legend.location = legend_location
 
     line3_tbl3_daily.legend.label_text_font_size = legend_font_size
+
+    line3_tbl3_daily.yaxis[0].formatter = NumeralTickFormatter(format="1,000") #xxxxx
 
     #######################################
 # Calculate the BEST_FIT line against _MAX
@@ -2079,6 +2091,8 @@ for config_section in config_sections:
 
     line4_tbl4_hourly_7_day.legend.label_text_font_size = legend_font_size
 
+    line4_tbl4_hourly_7_day.yaxis[0].formatter = NumeralTickFormatter(format="1,000") #xxxxx
+
 #######################################
 # Calculate the BEST_FIT line against _MAX
 #######################################
@@ -2147,6 +2161,8 @@ for config_section in config_sections:
     line4_tbl4_daily.legend.location = legend_location
 
     line4_tbl4_daily.legend.label_text_font_size = legend_font_size
+
+    line4_tbl4_daily.yaxis[0].formatter = NumeralTickFormatter(format="1,000") #xxxxx
 
 #######################################
 # Calculate the BEST_FIT line against _MAX
